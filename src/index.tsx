@@ -2,14 +2,18 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './root';
 import './index.scss';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const container = document.getElementById('root');
+const queryClient = new QueryClient();
 
 if (container) {
   createRoot(container).render(
-    <StrictMode>
-      <App />
-    </StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <StrictMode>
+        <App />
+      </StrictMode>
+    </QueryClientProvider>
   );
 } else
   throw new Error(

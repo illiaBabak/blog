@@ -1,0 +1,14 @@
+@import '../components';
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #5633af;
+}

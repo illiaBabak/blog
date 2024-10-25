@@ -1,0 +1,19 @@
+.skeleton-loader {
+  flex-shrink: 0;
+  background-color: #808080;
+  animation: animate-skeleton 1.8s linear infinite;
+}
+
+@keyframes animate-skeleton {
+  0% {
+    background-color: #808080;
+  }
+
+  50% {
+    background-color: #4e4e4e;
+  }
+
+  100% {
+    background-color: #808080;
+  }
+}

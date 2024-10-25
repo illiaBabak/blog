@@ -8,6 +8,7 @@ export default defineConfig({
     outDir: 'build',
     emptyOutDir: true,
   },
+  envPrefix: 'ENV_',
   server: {
     open: true,
     port: 3000,
