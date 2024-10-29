@@ -6,9 +6,9 @@
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: var(--primary-color);
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
-  background-color: #5633af;
+  background-color: var(--accent);
 }

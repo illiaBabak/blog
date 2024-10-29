@@ -1,5 +1,9 @@
 .header {
   height: 95px;
-  background-color: #ededed;
-  border-bottom: 2px solid #a9a8a8;
+  background-color: var(--primary-color);
+  border-bottom: 2px solid var(--second-color);
+
+  .title {
+    color: var(--accent);
+  }
 }
