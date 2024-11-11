@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { createContext, useEffect, useState } from 'react';
-import { BlogsList } from 'src/components/BlogsList';
-import { Header } from 'src/components/Header';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { LoginPage } from 'src/pages/LoginPage';
+import { MainPage } from 'src/pages/MainPage';
+import { RedirectPage } from 'src/pages/RedirectPage';
+import { StartPage } from 'src/pages/StartPage';
 import { Database } from 'src/types/supabase';
 import { SUPABASE_URL } from 'src/utils/constants';
 
@@ -39,10 +42,16 @@ export const App = (): JSX.Element => {
 
   return (
     <GlobalContext.Provider value={{ isLightTheme, setIsLightTheme }}>
-      <div className='d-flex flex-column'>
-        <Header />
-        <BlogsList />
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Navigate to='/start' />} />
+          <Route path='/*' element={<Navigate to='/redirect' />} />
+          <Route path='/start' element={<StartPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/redirect' element={<RedirectPage />} />
+          <Route path='/main' element={<MainPage />} />
+        </Routes>
+      </BrowserRouter>
     </GlobalContext.Provider>
   );
 };
