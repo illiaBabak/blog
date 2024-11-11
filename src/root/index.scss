@@ -1,6 +1,11 @@
 @import '../components';
 @import '../pages';
 
+.main-container {
+  height: 100vh;
+  width: 100vw;
+}
+
 .scroll-container {
   overflow: hidden auto;
 }

@@ -1,0 +1,11 @@
+.redirect-page {
+  .btn {
+    width: 200px;
+    background-color: var(--accent);
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+}

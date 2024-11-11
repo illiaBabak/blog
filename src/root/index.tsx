@@ -32,26 +32,28 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     const { body } = document;
 
-    body.style.setProperty('--primary-color', isLightTheme ? '#ededed' : '#292831');
+    body.style.setProperty('--primary-color', isLightTheme ? '#ebebee' : '#292831');
     body.style.setProperty('--second-color', isLightTheme ? '#a9a8a8' : '#8f9094');
     body.style.setProperty('--accent', isLightTheme ? '#5633af' : '#8e55cc');
-    body.style.setProperty('--main', isLightTheme ? '#c8c7c7' : '#333642');
+    body.style.setProperty('--main', isLightTheme ? '#efeeee' : '#333642');
 
     localStorage.setItem('is_light_theme', JSON.stringify(isLightTheme ? 'light' : 'dark'));
   }, [isLightTheme]);
 
   return (
-    <GlobalContext.Provider value={{ isLightTheme, setIsLightTheme }}>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Navigate to='/start' />} />
-          <Route path='/*' element={<Navigate to='/redirect' />} />
-          <Route path='/start' element={<StartPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/redirect' element={<RedirectPage />} />
-          <Route path='/main' element={<MainPage />} />
-        </Routes>
-      </BrowserRouter>
-    </GlobalContext.Provider>
+    <div className='main-container m-0 p-0'>
+      <GlobalContext.Provider value={{ isLightTheme, setIsLightTheme }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Navigate to='/start' />} />
+            <Route path='/*' element={<Navigate to='/redirect' />} />
+            <Route path='/start' element={<StartPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/redirect' element={<RedirectPage />} />
+            <Route path='/main' element={<MainPage />} />
+          </Routes>
+        </BrowserRouter>
+      </GlobalContext.Provider>
+    </div>
   );
 };

@@ -1,0 +1,15 @@
+.start-page {
+  .title {
+    font-size: 54px;
+  }
+
+  .btn {
+    width: 120px;
+    background-color: var(--accent);
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+}
