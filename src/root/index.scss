@@ -1,5 +1,9 @@
 @import '../components';
 
+.scroll-container {
+  overflow: hidden auto;
+}
+
 .scroll-container::-webkit-scrollbar {
   width: 8px;
   height: 8px;

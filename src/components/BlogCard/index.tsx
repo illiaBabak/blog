@@ -15,11 +15,7 @@ export const BlogCard = ({ blog }: Props): JSX.Element => {
       {isLoadingImg ? (
         <SkeletonLoader />
       ) : (
-        <img
-          src={url ? url : '/src/images/not-found.jpg'}
-          alt='blog image'
-          className='blog-img w-100 object-fit-cover'
-        />
+        <img src={url ? url : '/not-found.jpg'} alt='blog image' className='blog-img w-100 object-fit-cover' />
       )}
 
       <div className='px-3 py-2'>
