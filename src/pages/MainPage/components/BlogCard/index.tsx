@@ -1,7 +1,7 @@
 import { useBlogImageQuery } from 'src/api/blogs';
 import { Blog } from 'src/types/types';
 import { formatDate } from 'src/utils/formatDate';
-import { SkeletonLoader } from '../SkeletonLoader';
+import { SkeletonLoader } from '../../../../components/SkeletonLoader';
 
 type Props = {
   blog: Blog;

@@ -1,6 +1,6 @@
 import { useBlogsQuery } from 'src/api/blogs';
 import { BlogCard } from '../BlogCard';
-import { Loader } from '../Loader';
+import { Loader } from '../../../../components/Loader';
 
 export const BlogsList = (): JSX.Element => {
   const { data: blogs, isLoading } = useBlogsQuery();

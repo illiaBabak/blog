@@ -1,4 +1,4 @@
-import { ThemeBtn } from '../ThemeBtn';
+import { ThemeBtn } from '../../../../components/ThemeBtn';
 
 export const Header = (): JSX.Element => (
   <div className='header w-100 d-flex flex-row align-items-center justify-content-between px-4 py-1'>

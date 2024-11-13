@@ -1,0 +1,24 @@
+.login-window {
+  width: 400px;
+  height: 370px;
+  background-color: var(--primary-color);
+  border: 3px solid var(--accent);
+
+  .submit-btn {
+    background-color: var(--accent);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+
+  .change-btn {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

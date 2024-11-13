@@ -1,5 +1,5 @@
-import { BlogsList } from 'src/components/BlogsList';
-import { Header } from 'src/components/Header';
+import { BlogsList } from 'src/pages/MainPage/components/BlogsList';
+import { Header } from 'src/pages/MainPage/components/Header';
 
 export const MainPage = (): JSX.Element => {
   return (

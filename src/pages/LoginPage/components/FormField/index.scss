@@ -1,0 +1,11 @@
+.field {
+  .field-input {
+    width: 230px;
+    height: 26px;
+
+    &:focus {
+      outline: none;
+      border: 2px solid var(--accent);
+    }
+  }
+}
