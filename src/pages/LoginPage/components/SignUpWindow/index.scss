@@ -1,19 +1,33 @@
 .sign-up-window {
   width: 490px;
-  height: 450px;
+  height: 490px;
   background-color: var(--primary-color);
   border: 3px solid var(--accent);
 
-  .submit-btn {
-    background-color: var(--accent);
-    cursor: pointer;
-
-    &:hover {
-      transform: scale(1.05);
-      transition: 0.33s;
-    }
+  .error-text {
+    color: rgb(209, 30, 30);
   }
 
+  .btn-wrapper {
+    .submit-btn {
+      background-color: var(--accent);
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.05);
+        transition: 0.33s;
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+
+      .submit-btn {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+  }
   .change-btn {
     cursor: pointer;
 

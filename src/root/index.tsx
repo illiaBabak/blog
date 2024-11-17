@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { createContext, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Confirm } from 'src/pages/ConfirmPage';
 import { LoginPage } from 'src/pages/LoginPage';
 import { MainPage } from 'src/pages/MainPage';
 import { RedirectPage } from 'src/pages/RedirectPage';
@@ -51,6 +52,7 @@ export const App = (): JSX.Element => {
             <Route path='/login' element={<LoginPage />} />
             <Route path='/redirect' element={<RedirectPage />} />
             <Route path='/main' element={<MainPage />} />
+            <Route path='/confirm' element={<Confirm />} />
           </Routes>
         </BrowserRouter>
       </GlobalContext.Provider>
