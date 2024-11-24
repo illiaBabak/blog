@@ -23,9 +23,7 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
   const shouldLogin = email && password;
 
   useEffect(() => {
-    if (!isSuccesedLogin) return;
-
-    navigate(pageConfig.main);
+    if (isSuccesedLogin) navigate(pageConfig.main);
   }, [isSuccesedLogin, navigate]);
 
   return (

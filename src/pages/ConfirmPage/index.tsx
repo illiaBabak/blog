@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { supabase } from 'src/root';
+import { supabase } from 'src';
 
-export const Confirm = () => {
+export const Confirm = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const confirmUser = async () => {
       const token = searchParams.get('token');
 
-      if (token) {
-        await supabase.auth.verifyOtp({
-          token_hash: token,
-          type: 'email',
-        });
+      if (!token) return;
 
-        const channel = new BroadcastChannel('auth_channel');
-        channel.postMessage({ type: 'VERIFIED' });
-        channel.close();
-      }
+      await supabase.auth.verifyOtp({
+        token_hash: token,
+        type: 'email',
+      });
+
+      const channel = new BroadcastChannel('auth_channel');
+      channel.postMessage({ type: 'VERIFIED' });
+      channel.close();
     };
 
     confirmUser();

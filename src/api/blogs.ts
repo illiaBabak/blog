@@ -1,11 +1,11 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { BLOGS_QUERY, BLOG_IMAGE_QUERY } from './constants';
-import { supabase } from 'src/root';
 import { Blog } from 'src/types/types';
+import { supabase } from 'src';
 
 const getBlogs = async (): Promise<Blog[]> => {
   const { data, error } = await supabase.from('blogs').select();
-  console.log(data);
+
   if (error) throw new Error('Failed to load blogs');
 
   return data;

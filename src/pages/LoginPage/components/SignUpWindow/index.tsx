@@ -5,9 +5,9 @@ import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
 
-interface AuthMessage {
-  type: 'VERIFIED'; // или другие типы сообщений, если они есть
-}
+type AuthMessage = {
+  type: 'VERIFIED';
+};
 
 type Props = {
   setToLogin: () => void;
@@ -37,16 +37,6 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   useEffect(() => {
     if (loginMessage) setShouldConfirmEmail(false);
   }, [loginMessage, setShouldConfirmEmail]);
-
-  useEffect(() => {
-    if (shouldConfirmEmail && shouldSignUp) {
-      const timeoutId = setTimeout(() => {
-        setShouldConfirmEmail(false);
-      }, 60000);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [shouldConfirmEmail, setShouldConfirmEmail, shouldSignUp]);
 
   useEffect(() => {
     const channel = new BroadcastChannel('auth_channel');

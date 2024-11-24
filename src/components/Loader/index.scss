@@ -10,7 +10,7 @@
       linear-gradient(0deg, rgba(0, 0, 0, 0.5) 30%, transparent 0 70%, rgba(0, 0, 0, 1) 0) 50% / 8% 100%,
       linear-gradient(90deg, rgba(0, 0, 0, 0.25) 30%, transparent 0 70%, rgba(0, 0, 0, 0.75) 0) 50% / 100% 8%;
     background-repeat: no-repeat;
-    animation: l23 1s infinite steps(12);
+    animation: loader-animation 1s infinite steps(12);
 
     &::before,
     &::after {
@@ -29,7 +29,7 @@
   }
 }
 
-@keyframes l23 {
+@keyframes loader-animation {
   100% {
     transform: rotate(1turn);
   }

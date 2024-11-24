@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
 import { GlobalContext } from 'src/root';

@@ -1,9 +1,10 @@
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanstack/react-query';
-import { GlobalContext, supabase } from 'src/root';
+import { supabase } from 'src';
 import { USER_LOGIN, USER_MUTATION, USER_QUERY, USER_SIGN_UP } from './constants';
 import { useContext } from 'react';
 import { LoginContext } from 'src/pages/LoginPage';
 import { User } from '@supabase/supabase-js';
+import { pageConfig } from 'src/config/pages';
 
 const login = async ({ email, password }: { email: string; password: string }): Promise<void> => {
   const { error } = await supabase.auth.signInWithPassword({
@@ -32,7 +33,7 @@ const signUp = async ({
       data: {
         username: optionalData.username,
       },
-      emailRedirectTo: 'http://localhost:3000/confirm',
+      emailRedirectTo: `http://localhost:3000${pageConfig.confirm}`,
     },
   });
 

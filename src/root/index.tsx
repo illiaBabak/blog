@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { createContext, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Confirm } from 'src/pages/ConfirmPage';
@@ -6,10 +5,6 @@ import { LoginPage } from 'src/pages/LoginPage';
 import { MainPage } from 'src/pages/MainPage';
 import { RedirectPage } from 'src/pages/RedirectPage';
 import { StartPage } from 'src/pages/StartPage';
-import { Database } from 'src/types/supabase';
-import { SUPABASE_URL } from 'src/utils/constants';
-
-export const supabase = createClient<Database>(SUPABASE_URL, import.meta.env.ENV_API_KEY);
 
 type GlobalContextType = {
   isLightTheme: boolean;
