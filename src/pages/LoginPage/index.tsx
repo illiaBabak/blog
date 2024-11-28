@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import { ThemeBtn } from 'src/components/ThemeBtn';
 import { LoginWindow } from 'src/pages/LoginPage/components/LoginWindow';
 import { SignUpWindow } from 'src/pages/LoginPage/components/SignUpWindow';
 
@@ -27,12 +28,15 @@ export const LoginPage = (): JSX.Element => {
 
   return (
     <LoginContext.Provider value={{ loginMessage, setLoginMessage, isSuccesedLogin, setIsSuccesedLogin }}>
-      <div className='login-page d-flex justify-content-center align-items-center w-100 h-100'>
-        {isLogin ? (
-          <LoginWindow setToSignUp={() => setIsLogin(false)} />
-        ) : (
-          <SignUpWindow setToLogin={() => setIsLogin(true)} />
-        )}
+      <div className='login-page d-flex flex-column w-100 h-100 p-2'>
+        <ThemeBtn />
+        <div className='m-auto'>
+          {isLogin ? (
+            <LoginWindow setToSignUp={() => setIsLogin(false)} />
+          ) : (
+            <SignUpWindow setToLogin={() => setIsLogin(true)} />
+          )}
+        </div>
       </div>
     </LoginContext.Provider>
   );
