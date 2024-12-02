@@ -9,3 +9,7 @@ export const USER_LOGIN = 'user_login';
 export const USER_SIGN_UP = 'user_sign_up';
 
 export const USER_QUERY = 'user_query';
+
+export const USER_IMAGE_UPLOAD = 'user_upload';
+
+export const USER_IMAGE_QUERY = 'user_image_query';

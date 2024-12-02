@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { FormField } from '../FormField';
-import { useSignUp } from 'src/api/user';
+import { useSignUp, useUploadImage } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
@@ -22,10 +22,13 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [shouldConfirmEmail, setShouldConfirmEmail] = useState(false);
+  const [pfp, setPfp] = useState<File | null>();
 
   const isIdenticalPasswords = password === confirmedPassword;
 
   const shouldSignUp = username && email && password && confirmedPassword && isIdenticalPasswords;
+
+  const { mutateAsync: uploadUserImage } = useUploadImage();
 
   const { mutateAsync: signUp } = useSignUp();
 
@@ -42,7 +45,10 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
     const channel = new BroadcastChannel('auth_channel');
 
     const handleMessage = ({ data: { type } }: MessageEvent<AuthMessage>) => {
-      if (type === 'VERIFIED') navigate(pageConfig.main);
+      if (type === 'VERIFIED' && pfp) {
+        uploadUserImage({ email: email.split('@')[0], file: pfp });
+        navigate(pageConfig.main);
+      }
     };
 
     channel.addEventListener('message', handleMessage);
@@ -51,12 +57,31 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
       channel.removeEventListener('message', handleMessage);
       channel.close();
     };
-  }, [navigate]);
+  }, [navigate, pfp, email, uploadUserImage]);
 
   return (
     <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between'>
       <div>
         <h2>Sign up</h2>
+        <div className='position-relative'>
+          <img
+            className='icon object-fit-contain rounded-circle'
+            src={pfp ? URL.createObjectURL(pfp) : '/empty-pfp.png'}
+            alt='pfp'
+          />
+          <input
+            type='file'
+            className='file-input position-absolute'
+            onChange={({ currentTarget: { files } }) => {
+              if (!files) return;
+
+              const image = files[0];
+
+              setPfp(image);
+            }}
+          />
+        </div>
+
         <FormField
           fieldName='Username'
           inputVal={username}
