@@ -4,7 +4,7 @@
 
   .name {
     font-size: 14px;
-    color: rgb(131, 131, 131);
+    color: var(--second-color);
   }
 
   .field-input {
@@ -18,5 +18,13 @@
     &:focus {
       outline: none;
     }
+  }
+
+  .eye-icon {
+    width: 28px;
+    height: 28px;
+    right: 4px;
+    background-color: #fff;
+    cursor: pointer;
   }
 }

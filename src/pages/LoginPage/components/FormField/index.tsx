@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 type Props = {
   fieldName: string;
@@ -8,17 +8,33 @@ type Props = {
 };
 
 export const FormField = ({ fieldName, inputVal, type, onChange }: Props): JSX.Element => {
+  const [shouldShowPassword, setShouldShowPassword] = useState(false);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const focusInput = () => inputRef.current?.focus();
 
   return (
     <div
-      className='field d-flex flex-column justify-content-between align-items-start w-100 mt-4 p-2 rounded'
+      className='field d-flex flex-column justify-content-between align-items-start w-100 mt-4 p-2 rounded position-relative'
       onClick={focusInput}
     >
       <p className='name mb-1'>{fieldName}</p>
-      <input ref={inputRef} className='field-input w-100' type={type} value={inputVal} onChange={onChange} />
+      <input
+        ref={inputRef}
+        className='field-input w-100'
+        type={shouldShowPassword ? 'text' : type}
+        value={inputVal}
+        onChange={onChange}
+      />
+      {type === 'password' && (
+        <img
+          onClick={() => setShouldShowPassword((prev) => !prev)}
+          className='object-fit-contain eye-icon position-absolute rounded-circle p-1'
+          src={shouldShowPassword ? '/show.png' : 'hide.png'}
+          alt='eye-icon'
+        />
+      )}
     </div>
   );
 };
