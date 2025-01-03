@@ -27,9 +27,10 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
   }, [isSuccesedLogin, navigate]);
 
   return (
-    <div className='login-window p-3 d-flex flex-column justify-content-between text-center'>
+    <div className='login-window p-3 d-flex flex-column justify-content-between mb-4'>
       <div>
-        <h1>Login</h1>
+        <h1 className='mb-1'>Welcome back!</h1>
+        <p className='sub-text pb-2'>Welcome back! Please enter your details</p>
         <FormField
           type='text'
           inputVal={email}
@@ -44,9 +45,9 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
         />
       </div>
       <p className='error-text'>{loginMessage ? loginMessage : ''}</p>
-      <div>
+      <div className='text-center mt-3'>
         <div className={`btn-wrapper ${!shouldLogin ? 'disabled' : ''}`}>
-          <div className='submit-btn text-white p-1 rounded' onClick={handleLogin}>
+          <div className='submit-btn text-white p-1 py-2 rounded' onClick={handleLogin}>
             Log in
           </div>
         </div>

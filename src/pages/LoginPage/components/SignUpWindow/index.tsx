@@ -60,26 +60,29 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   }, [navigate, pfp, email, uploadUserImage]);
 
   return (
-    <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between'>
-      <div>
+    <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between mb-4'>
+      <div className='d-flex flex-column content justify-content-center'>
         <h2>Sign up</h2>
-        <div className='position-relative'>
-          <img
-            className='icon object-fit-contain rounded-circle'
-            src={pfp ? URL.createObjectURL(pfp) : '/empty-pfp.png'}
-            alt='pfp'
-          />
-          <input
-            type='file'
-            className='file-input position-absolute'
-            onChange={({ currentTarget: { files } }) => {
-              if (!files) return;
+        <div className='d-flex flex-column align-items-center mt-3'>
+          <div className='position-relative d-flex img-wrapper'>
+            <img
+              className='icon object-fit-contain rounded-circle'
+              src={pfp ? URL.createObjectURL(pfp) : '/empty-pfp.png'}
+              alt='pfp'
+            />
+            <input
+              type='file'
+              className='file-input position-absolute'
+              onChange={({ currentTarget: { files } }) => {
+                if (!files) return;
 
-              const image = files[0];
+                const image = files[0];
 
-              setPfp(image);
-            }}
-          />
+                setPfp(image);
+              }}
+            />
+          </div>
+          <p className='m-0 mt-1'>{pfp ? pfp.name : 'Empty profile picture'}</p>
         </div>
 
         <FormField
@@ -102,7 +105,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
         />
 
         <FormField
-          fieldName='Confirmed'
+          fieldName='Confirmed password'
           inputVal={confirmedPassword}
           type='password'
           onChange={({ currentTarget: { value } }) => setConfirmedPassword(value)}
@@ -115,7 +118,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
       </p>
       <div>
         <div className={`btn-wrapper ${!shouldSignUp || shouldConfirmEmail ? 'disabled' : ''}`}>
-          <div onClick={handleSignUp} className='submit-btn text-white p-1 rounded'>
+          <div onClick={handleSignUp} className='submit-btn text-white p-1 py-2 rounded'>
             Sign up
           </div>
         </div>

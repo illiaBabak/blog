@@ -1,14 +1,35 @@
 .header {
   height: 95px;
   background-color: var(--primary-color);
-  border-bottom: 2px solid var(--second-color);
 
   .title {
     color: var(--accent);
   }
 
-  .user-icon {
-    width: 60px;
-    height: 60px;
+  .search-container {
+    background-color: var(--main);
+
+    .search-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .search-input {
+      width: 280px;
+      outline: none;
+      border: none;
+      background-color: var(--main);
+    }
+
+    .clear-btn {
+      right: 8px;
+      color: var(--accent);
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.05);
+        transition: 0.33s;
+      }
+    }
   }
 }

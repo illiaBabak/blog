@@ -1,14 +1,20 @@
 .start-page {
+  .title {
+    font-size: 72px;
+    color: var(--accent);
+  }
+
   .theme-btn {
     align-self: flex-end;
   }
 
-  .title {
-    font-size: 54px;
+  .description {
+    width: 450px;
+    color: gray;
   }
 
   .btn {
-    width: 120px;
+    width: 150px;
     background-color: var(--accent);
 
     &:hover {

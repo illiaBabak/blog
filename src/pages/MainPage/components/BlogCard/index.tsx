@@ -11,7 +11,7 @@ export const BlogCard = ({ blog }: Props): JSX.Element => {
   const { data: url, isLoading: isLoadingImg } = useBlogImageQuery(blog.image_url);
 
   return (
-    <div className='blog rounded m-3'>
+    <div className='blog rounded mt-0 mb-4 mx-3'>
       {isLoadingImg ? (
         <SkeletonLoader />
       ) : (

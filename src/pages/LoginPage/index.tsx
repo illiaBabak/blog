@@ -30,7 +30,7 @@ export const LoginPage = (): JSX.Element => {
     <LoginContext.Provider value={{ loginMessage, setLoginMessage, isSuccesedLogin, setIsSuccesedLogin }}>
       <div className='login-page d-flex flex-column w-100 h-100 p-2'>
         <ThemeBtn />
-        <div className='m-auto'>
+        <div className={`${isLogin ? 'm-auto' : 'mx-auto'}`}>
           {isLogin ? (
             <LoginWindow setToSignUp={() => setIsLogin(false)} />
           ) : (

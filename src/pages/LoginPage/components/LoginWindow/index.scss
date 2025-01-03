@@ -1,11 +1,13 @@
 .login-window {
   width: 400px;
   height: 370px;
-  background-color: var(--primary-color);
-  border: 3px solid var(--accent);
 
   .error-text {
     color: rgb(209, 30, 30);
+  }
+
+  .sub-text {
+    color: gray;
   }
 
   .btn-wrapper {

@@ -1,11 +1,22 @@
 .field {
+  background-color: var(--primary-color);
+  cursor: pointer;
+
+  .name {
+    font-size: 14px;
+    color: rgb(131, 131, 131);
+  }
+
   .field-input {
-    width: 230px;
-    height: 26px;
+    width: 265px;
+    height: 24px;
+    color: var(--text);
+    background-color: var(--primary-color);
+    border: none;
+    outline: none;
 
     &:focus {
       outline: none;
-      border: 2px solid var(--accent);
     }
   }
 }

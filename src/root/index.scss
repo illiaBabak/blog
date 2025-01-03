@@ -6,19 +6,26 @@
   width: 100vw;
 }
 
-.scroll-container {
+.scroll-container-y {
   overflow: hidden auto;
 }
 
-.scroll-container::-webkit-scrollbar {
+.scroll-container-x {
+  overflow: auto hidden;
+}
+
+.scroll-container-x::-webkit-scrollbar,
+.scroll-container-y::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.scroll-container::-webkit-scrollbar-track {
+.scroll-container-x::-webkit-scrollbar-track,
+.scroll-container-y::-webkit-scrollbar-track {
   background: var(--primary-color);
 }
 
-.scroll-container::-webkit-scrollbar-thumb {
+.scroll-container-x::-webkit-scrollbar-thumb,
+.scroll-container-y::-webkit-scrollbar-thumb {
   background-color: var(--accent);
 }

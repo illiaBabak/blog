@@ -1,0 +1,21 @@
+.user-info {
+  width: 200px;
+  height: 280px;
+  background-color: var(--primary-color);
+
+  .user-icon {
+    width: 90px;
+    height: 90px;
+  }
+
+  .user-btn {
+    width: 150px;
+    background-color: var(--accent);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+}
