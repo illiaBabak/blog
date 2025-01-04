@@ -1,6 +1,15 @@
-import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanstack/react-query';
+import { UseMutationResult, UseQueryResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from 'src';
-import { USER_IMAGE_QUERY, USER_IMAGE_UPLOAD, USER_LOGIN, USER_MUTATION, USER_QUERY, USER_SIGN_UP } from './constants';
+import {
+  USER_GOOGLE_SIGN_IN,
+  USER_IMAGE_QUERY,
+  USER_IMAGE_UPLOAD,
+  USER_LOGIN,
+  USER_MUTATION,
+  USER_QUERY,
+  USER_SIGN_UP,
+  USER_UPDATE_METADATA,
+} from './constants';
 import { useContext } from 'react';
 import { LoginContext } from 'src/pages/LoginPage';
 import { User } from '@supabase/supabase-js';
@@ -68,6 +77,25 @@ const getUserImage = (email: string) => {
   return publicUrl;
 };
 
+const signInWithOAuth = async (): Promise<void> => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `http://localhost:3000${pageConfig.main}`,
+    },
+  });
+
+  if (error) throw new Error(error.stack);
+};
+
+const updateUserMetadata = async (username: string): Promise<void> => {
+  const { error } = await supabase.auth.updateUser({
+    data: { username },
+  });
+
+  if (error) throw new Error(error.stack);
+};
+
 export const useLogin = (): UseMutationResult<void, Error, { email: string; password: string }> => {
   const { setLoginMessage, setIsSuccesedLogin } = useContext(LoginContext);
 
@@ -129,3 +157,32 @@ export const useGetUserImageQuery = (email: string): UseQueryResult<string, Erro
       return getUserImage(email);
     },
   });
+
+export const useSignInWithGoogle = (): UseMutationResult<void, Error> => {
+  const { setLoginMessage } = useContext(LoginContext);
+
+  return useMutation({
+    mutationKey: [USER_MUTATION, USER_GOOGLE_SIGN_IN],
+    mutationFn: signInWithOAuth,
+    onSuccess: () => {
+      setLoginMessage(null);
+    },
+    onError: (error) => {
+      setLoginMessage(error.message);
+    },
+  });
+};
+
+export const useUpdateUserMetadata = (): UseMutationResult<void, Error, { username: string }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [USER_MUTATION, USER_UPDATE_METADATA],
+    mutationFn: async ({ username }) => {
+      return await updateUserMetadata(username);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_QUERY] });
+    },
+  });
+};

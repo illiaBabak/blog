@@ -13,3 +13,7 @@ export const USER_QUERY = 'user_query';
 export const USER_IMAGE_UPLOAD = 'user_upload';
 
 export const USER_IMAGE_QUERY = 'user_image_query';
+
+export const USER_GOOGLE_SIGN_IN = 'user_google_sign_in';
+
+export const USER_UPDATE_METADATA = 'user_update_metadata';

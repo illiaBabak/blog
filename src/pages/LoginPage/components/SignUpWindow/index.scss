@@ -3,23 +3,23 @@
 
   .content {
     .img-wrapper {
-      width: 120px;
-      height: 120px;
+      width: 105px;
+      height: 105px;
       cursor: pointer;
 
       .file-input {
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
+        width: 105px;
+        height: 105px;
         opacity: 0;
         cursor: pointer;
       }
 
       .icon {
-        width: 120px;
-        height: 120px;
+        width: 105px;
+        height: 105px;
         cursor: pointer;
       }
     }

@@ -1,6 +1,6 @@
 .login-window {
   width: 400px;
-  height: 370px;
+  height: 470px;
 
   .error-text {
     color: rgb(209, 30, 30);
@@ -28,6 +28,22 @@
         pointer-events: none;
         opacity: 0.5;
       }
+    }
+  }
+
+  .google-btn {
+    height: 50px;
+    background-color: #fff;
+    cursor: pointer;
+
+    .google-logo {
+      width: 35px;
+      height: 35px;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
     }
   }
 

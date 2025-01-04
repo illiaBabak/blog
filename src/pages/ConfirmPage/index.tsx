@@ -12,14 +12,13 @@ export const Confirm = (): JSX.Element => {
 
       if (!token) return;
 
+      const channel = new BroadcastChannel('auth_channel');
+      channel.postMessage({ type: 'VERIFIED' });
+
       await supabase.auth.verifyOtp({
         token_hash: token,
         type: 'email',
       });
-
-      const channel = new BroadcastChannel('auth_channel');
-      channel.postMessage({ type: 'VERIFIED' });
-      channel.close();
     };
 
     confirmUser();

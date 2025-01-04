@@ -4,6 +4,7 @@ import { useSignUp, useUploadImage } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
+import { validateEmail } from 'src/utils/validateEmail';
 
 type AuthMessage = {
   type: 'VERIFIED';
@@ -14,9 +15,10 @@ type Props = {
 };
 
 export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
-  const { loginMessage } = useContext(LoginContext);
+  const { loginMessage, setLoginMessage } = useContext(LoginContext);
   const navigate = useNavigate();
 
+  const [shouldClickSignUpBtn, setShouldClickSignUpBtn] = useState(true); // State for handle multiple click on sign up btn
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,16 +28,33 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
 
   const isIdenticalPasswords = password === confirmedPassword;
 
-  const shouldSignUp = username && email && password && confirmedPassword && isIdenticalPasswords;
+  const passwordCorectLength = password.length >= 6; // Password should be at least 6 characters
+
+  const shouldSignUp =
+    username && email && password && confirmedPassword && isIdenticalPasswords && passwordCorectLength;
 
   const { mutateAsync: uploadUserImage } = useUploadImage();
 
   const { mutateAsync: signUp } = useSignUp();
 
   const handleSignUp = () => {
+    if (!validateEmail(email)) {
+      setLoginMessage('Email is not valid!');
+      return;
+    }
+
     signUp({ email, password, optionalData: { username } });
     setShouldConfirmEmail(true);
+    setShouldClickSignUpBtn(false);
   };
+
+  useEffect(() => {
+    if (shouldClickSignUpBtn) return;
+
+    setTimeout(() => {
+      setShouldClickSignUpBtn(true);
+    }, 5000);
+  }, [shouldClickSignUpBtn]);
 
   useEffect(() => {
     if (loginMessage) setShouldConfirmEmail(false);
@@ -60,10 +79,10 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   }, [navigate, pfp, email, uploadUserImage]);
 
   return (
-    <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between mb-4'>
+    <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between'>
       <div className='d-flex flex-column content justify-content-center'>
-        <h2>Sign up</h2>
-        <div className='d-flex flex-column align-items-center mt-3'>
+        <h3>Sign up</h3>
+        <div className='d-flex flex-column align-items-center mt-2'>
           <div className='position-relative d-flex img-wrapper'>
             <img
               className='icon object-fit-contain rounded-circle'
@@ -111,13 +130,16 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
           onChange={({ currentTarget: { value } }) => setConfirmedPassword(value)}
         />
       </div>
-      <p className='error-text'>
-        {!isIdenticalPasswords && '*Passwords are not identical!'}
-        {loginMessage ? loginMessage : ''}
-        {shouldConfirmEmail && !loginMessage && 'Check your email to confirm!'}
-      </p>
+      <div className='error-text my-2 d-flex flex-column'>
+        {!isIdenticalPasswords && <p className='mb-0'>*Passwords are not identical!</p>}
+        {!passwordCorectLength && password.length !== 0 && (
+          <p className='mb-0'>*Password should be at least 6 characters!</p>
+        )}
+        {!!loginMessage && isIdenticalPasswords && passwordCorectLength && <p className='mb-0'>{loginMessage}</p>}
+        {shouldConfirmEmail && !loginMessage && <p className='mb-0'>Check your email to confirm!</p>}
+      </div>
       <div>
-        <div className={`btn-wrapper ${!shouldSignUp || shouldConfirmEmail ? 'disabled' : ''}`}>
+        <div className={`btn-wrapper ${!shouldSignUp || !shouldClickSignUpBtn ? 'disabled' : ''}`}>
           <div onClick={handleSignUp} className='submit-btn text-white p-1 py-2 rounded'>
             Sign up
           </div>

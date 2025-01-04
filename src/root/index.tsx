@@ -32,6 +32,7 @@ export const App = (): JSX.Element => {
     body.style.setProperty('--second-color', isLightTheme ? '#a9a8a8' : '#8f9094');
     body.style.setProperty('--accent', isLightTheme ? '#5633af' : '#8e55cc');
     body.style.setProperty('--primary-color', isLightTheme ? '#fff' : '#333642');
+    body.style.setProperty('--start-page', isLightTheme ? '#fff' : '#292831');
 
     localStorage.setItem('is_light_theme', JSON.stringify(isLightTheme ? 'light' : 'dark'));
   }, [isLightTheme]);

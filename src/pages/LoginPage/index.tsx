@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 import { LoginWindow } from 'src/pages/LoginPage/components/LoginWindow';
 import { SignUpWindow } from 'src/pages/LoginPage/components/SignUpWindow';
@@ -25,6 +25,10 @@ export const LoginPage = (): JSX.Element => {
   const [isLogin, setIsLogin] = useState(true);
   const [isSuccesedLogin, setIsSuccesedLogin] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoginMessage(null);
+  }, [isLogin, setLoginMessage]);
 
   return (
     <LoginContext.Provider value={{ loginMessage, setLoginMessage, isSuccesedLogin, setIsSuccesedLogin }}>
