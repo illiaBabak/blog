@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useGetUserImageQuery, useGetUserQuery, useUpdateUserMetadata, useUploadImage } from 'src/api/user';
+import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { urlToFile } from 'src/utils/urlToFile';
 
 export const UserInfo = (): JSX.Element => {
-  const { data: user } = useGetUserQuery();
+  const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
 
   const { data: userImg, isLoading: isLoadingUserImg } = useGetUserImageQuery(user?.email?.split('@')[0] ?? ''); // key of user image is local part of email
 
@@ -27,14 +28,14 @@ export const UserInfo = (): JSX.Element => {
     <div className='d-flex flex-column align-items-center user-info rounded'>
       <img
         className='user-icon mt-4 rounded-circle'
-        src={isLoadingUserImg ? '/empty-pfp.png' : userImg}
+        src={isLoadingUser || isLoadingUserImg ? '/empty-pfp.png' : userImg}
         alt='user-icon'
       />
 
-      <h4 className='mt-2'>{user?.user_metadata.username}</h4>
+      {isLoadingUser ? <SkeletonLoader /> : <h4 className='m-0 username'>{user?.user_metadata.username}</h4>}
 
       <div className='d-flex flex-column mt-4 text-center text-white'>
-        <div className='user-btn p-1 rounded'>Edit your profile</div>
+        <div className='user-btn p-1 rounded'>My profile</div>
         <div className='user-btn p-1 mt-2 rounded'>Logout</div>
       </div>
     </div>

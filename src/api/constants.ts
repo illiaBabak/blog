@@ -2,6 +2,10 @@ export const BLOGS_QUERY = 'blogs_query';
 
 export const BLOG_IMAGE_QUERY = 'blog_image_query';
 
+export const BLOG_MUTATION = 'blog_mutation';
+
+export const BLOG_CREATE_BLOG = 'blog_create_blog';
+
 export const USER_MUTATION = 'user_mutation';
 
 export const USER_LOGIN = 'user_login';

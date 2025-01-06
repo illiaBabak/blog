@@ -1,7 +1,7 @@
 import { useBlogImageQuery } from 'src/api/blogs';
+import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { Blog } from 'src/types/types';
 import { formatDate } from 'src/utils/formatDate';
-import { SkeletonLoader } from '../../../../components/SkeletonLoader';
 
 type Props = {
   blog: Blog;
@@ -21,7 +21,7 @@ export const BlogCard = ({ blog }: Props): JSX.Element => {
       <div className='px-3 py-2'>
         <p className='date m-0'>{formatDate(blog.created_at)}</p>
         <h3 className='title my-2'>{blog.title}</h3>
-        <p className='description m-0 scroll-container'>{blog.description}</p>
+        <p className='description m-0 scroll-container-y'>{blog.description}</p>
       </div>
     </div>
   );

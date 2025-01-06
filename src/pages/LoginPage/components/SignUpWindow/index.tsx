@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { FormField } from '../FormField';
+import { FormField } from '../../../../components/FormField';
 import { useSignUp, useUploadImage } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';

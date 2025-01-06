@@ -25,6 +25,11 @@
   }
 
   .title {
+    display: inline-block;
+    text-overflow: ellipsis;
+    word-break: nowrap;
+    overflow: hidden;
+    width: 330px;
     color: var(--accent);
   }
 }
