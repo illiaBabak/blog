@@ -2,10 +2,9 @@ import { UseMutationResult, UseQueryResult, useMutation, useQuery, useQueryClien
 import { BLOGS_QUERY, BLOG_CREATE_BLOG, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
-import { generateKey } from 'src/utils/generateKey';
 
 const getBlogs = async (): Promise<Blog[]> => {
-  const { data, error } = await supabase.from('blogs').select();
+  const { data, error } = await supabase.from('blogs').select().order('created_at', { ascending: false });
 
   if (error) throw new Error('Failed to load blogs');
 
@@ -31,9 +30,7 @@ const uploadBlogImage = async (image: File, imageKey: string) => {
   if (error) throw new Error(error.stack);
 };
 
-const createBlog = async (title: string, description: string, image: File | null): Promise<void> => {
-  const imageKey = generateKey(16);
-
+const createBlog = async (title: string, description: string, image: File | null, imageKey: string): Promise<void> => {
   const { error } = await supabase
     .from('blogs')
     .insert({ title, description, image_url: image ? imageKey : null })
@@ -61,17 +58,18 @@ export const useBlogImageQuery = (url: string | null): UseQueryResult<string | n
 export const useCreateBlog = (): UseMutationResult<
   void,
   Error,
-  { title: string; description: string; image: File | null }
+  { title: string; description: string; image: File | null; imageKey: string }
 > => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: [BLOG_MUTATION, BLOG_CREATE_BLOG],
-    mutationFn: async ({ title, description, image }) => {
-      return await createBlog(title, description, image);
+    mutationFn: async ({ title, description, image, imageKey }) => {
+      return await createBlog(title, description, image, imageKey);
     },
-    onSettled: () => {
+    onSettled: (_, __, { imageKey }) => {
       queryClient.invalidateQueries({ queryKey: [BLOGS_QUERY] });
+      queryClient.invalidateQueries({ queryKey: [BLOG_IMAGE_QUERY, imageKey] });
     },
   });
 };

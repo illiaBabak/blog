@@ -1,6 +1,14 @@
-import { UseMutationResult, UseQueryResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { supabase } from 'src';
 import {
+  USER_GET_BY_ID,
   USER_GOOGLE_SIGN_IN,
   USER_IMAGE_QUERY,
   USER_IMAGE_UPLOAD,
@@ -14,12 +22,19 @@ import { useContext } from 'react';
 import { LoginContext } from 'src/pages/LoginPage';
 import { User } from '@supabase/supabase-js';
 import { pageConfig } from 'src/config/pages';
+import { PublicUser } from 'src/types/types';
 
 const login = async ({ email, password }: { email: string; password: string }): Promise<void> => {
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+
+  if (error) throw new Error(error.message);
+};
+
+const uploadUserPublicData = async (email: string, username: string, userId: string): Promise<void> => {
+  const { error } = await supabase.from('users').insert({ email, username, user_id: userId });
 
   if (error) throw new Error(error.message);
 };
@@ -35,7 +50,10 @@ const signUp = async ({
     username: string;
   };
 }): Promise<void> => {
-  const { error } = await supabase.auth.signUp({
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -47,6 +65,8 @@ const signUp = async ({
   });
 
   if (error) throw new Error(error.message);
+
+  if (user) uploadUserPublicData(email, optionalData.username, user.id);
 };
 
 const getUser = async (): Promise<User | null> => {
@@ -89,11 +109,24 @@ const signInWithOAuth = async (): Promise<void> => {
 };
 
 const updateUserMetadata = async (username: string): Promise<void> => {
-  const { error } = await supabase.auth.updateUser({
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.updateUser({
     data: { username },
   });
 
   if (error) throw new Error(error.stack);
+
+  if (user) uploadUserPublicData(user.email ?? '', username, user.id);
+};
+
+const getUserById = async (userId: string): Promise<PublicUser> => {
+  const { data, error } = await supabase.from('users').select().eq('user_id', userId);
+
+  if (error) throw new Error(error.stack);
+
+  return data[0];
 };
 
 export const useLogin = (): UseMutationResult<void, Error, { email: string; password: string }> => {
@@ -186,3 +219,15 @@ export const useUpdateUserMetadata = (): UseMutationResult<void, Error, { userna
     },
   });
 };
+
+export const useUserByIdQuery = (
+  userId: string,
+  options?: Partial<UseQueryOptions<PublicUser>>
+): UseQueryResult<PublicUser, Error> =>
+  useQuery({
+    queryKey: [USER_GET_BY_ID, userId],
+    queryFn: async () => {
+      return await getUserById(userId);
+    },
+    ...options,
+  });

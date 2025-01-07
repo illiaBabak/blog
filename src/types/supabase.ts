@@ -1,4 +1,4 @@
-import { Blog } from './types';
+import { Blog, PublicUser } from './types';
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -38,6 +38,7 @@ export type Database = {
           id?: number;
           image_url?: string | null;
           title?: string | null;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string | null;
@@ -45,27 +46,23 @@ export type Database = {
           id?: number;
           image_url?: string | null;
           title?: string | null;
+          user_id?: string | null;
         };
         Relationships: [];
       };
-      login_status: {
-        Row: {
-          id: number;
-          is_successful: boolean | null;
-          updated_at: string | null;
-          user_id: string;
-        };
+      users: {
+        Row: PublicUser;
         Insert: {
+          email?: string | null;
           id?: number;
-          is_successful?: boolean | null;
-          updated_at?: string | null;
           user_id: string;
+          username?: string | null;
         };
         Update: {
+          email?: string | null;
           id?: number;
-          is_successful?: boolean | null;
-          updated_at?: string | null;
           user_id?: string;
+          username?: string | null;
         };
         Relationships: [];
       };

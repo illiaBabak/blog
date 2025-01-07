@@ -13,7 +13,7 @@ export const UserInfo = (): JSX.Element => {
   const { mutateAsync: updateUser } = useUpdateUserMetadata();
 
   useEffect(() => {
-    if (user?.app_metadata.provider === 'google' && user.email) {
+    if (user?.app_metadata.provider === 'google' && user.email && !user.user_metadata.username) {
       const uploadDataUser = async () => {
         const userImgFile = await urlToFile(user.user_metadata.avatar_url as string, 'image.jpg');
 

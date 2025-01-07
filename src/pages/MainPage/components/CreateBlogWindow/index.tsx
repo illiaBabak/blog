@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { MainPageContext } from '../..';
 import { FormField } from 'src/components/FormField';
 import { useCreateBlog } from 'src/api/blogs';
+import { generateKey } from 'src/utils/generateKey';
 
 export const CreateBlogWindow = (): JSX.Element => {
   const { setShouldShowCreateWindow } = useContext(MainPageContext);
@@ -14,7 +15,9 @@ export const CreateBlogWindow = (): JSX.Element => {
   const hideWindow = () => setShouldShowCreateWindow(false);
 
   const createBlogHandle = () => {
-    createBlog({ title, description, image: blogImg });
+    const imageKey = generateKey(16);
+
+    createBlog({ title, description, image: blogImg, imageKey });
     hideWindow();
   };
 

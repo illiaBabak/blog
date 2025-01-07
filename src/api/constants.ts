@@ -21,3 +21,5 @@ export const USER_IMAGE_QUERY = 'user_image_query';
 export const USER_GOOGLE_SIGN_IN = 'user_google_sign_in';
 
 export const USER_UPDATE_METADATA = 'user_update_metadata';
+
+export const USER_GET_BY_ID = 'user_get_by_id';
