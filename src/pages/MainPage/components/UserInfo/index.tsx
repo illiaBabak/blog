@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
-import { useGetUserImageQuery, useGetUserQuery, useUpdateUserMetadata, useUploadImage } from 'src/api/user';
+import { useNavigate } from 'react-router-dom';
+import { useGetUserImageQuery, useGetUserQuery, useSignOut, useUpdateUserMetadata, useUploadImage } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
+import { pageConfig } from 'src/config/pages';
 import { urlToFile } from 'src/utils/urlToFile';
 
 export const UserInfo = (): JSX.Element => {
+  const navigate = useNavigate();
+
   const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
 
   const { data: userImg, isLoading: isLoadingUserImg } = useGetUserImageQuery(user?.email?.split('@')[0] ?? ''); // key of user image is local part of email
@@ -11,6 +15,13 @@ export const UserInfo = (): JSX.Element => {
   const { mutateAsync: uploadImg } = useUploadImage();
 
   const { mutateAsync: updateUser } = useUpdateUserMetadata();
+
+  const { mutateAsync: signOut } = useSignOut();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate(pageConfig.start);
+  };
 
   useEffect(() => {
     if (user?.app_metadata.provider === 'google' && user.email && !user.user_metadata.username) {
@@ -36,7 +47,9 @@ export const UserInfo = (): JSX.Element => {
 
       <div className='d-flex flex-column mt-4 text-center text-white'>
         <div className='user-btn p-1 rounded'>My profile</div>
-        <div className='user-btn p-1 mt-2 rounded'>Logout</div>
+        <div className='user-btn p-1 mt-2 rounded' onClick={handleSignOut}>
+          Logout
+        </div>
       </div>
     </div>
   );

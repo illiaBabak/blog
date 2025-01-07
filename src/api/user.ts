@@ -15,6 +15,7 @@ import {
   USER_LOGIN,
   USER_MUTATION,
   USER_QUERY,
+  USER_SIGN_OUT,
   USER_SIGN_UP,
   USER_UPDATE_METADATA,
 } from './constants';
@@ -129,6 +130,12 @@ const getUserById = async (userId: string): Promise<PublicUser> => {
   return data[0];
 };
 
+const signOut = async (): Promise<void> => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) throw new Error(error.stack);
+};
+
 export const useLogin = (): UseMutationResult<void, Error, { email: string; password: string }> => {
   const { setLoginMessage, setIsSuccesedLogin } = useContext(LoginContext);
 
@@ -231,3 +238,10 @@ export const useUserByIdQuery = (
     },
     ...options,
   });
+
+export const useSignOut = (): UseMutationResult<void, Error, void, unknown> => {
+  return useMutation({
+    mutationKey: [USER_MUTATION, USER_SIGN_OUT],
+    mutationFn: signOut,
+  });
+};
