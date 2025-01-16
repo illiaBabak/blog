@@ -25,7 +25,7 @@ export const UserInfo = (): JSX.Element => {
     navigate(pageConfig.start);
   };
 
-  const redirectToMyProfile = () => navigate(pageConfig.profile);
+  const redirectToProfile = () => navigate(`${pageConfig.profile}?userId=${user?.id}`);
 
   const userCreatedDate = new Date(user?.created_at ?? '').getTime();
 
@@ -71,7 +71,7 @@ export const UserInfo = (): JSX.Element => {
       {isLoadingUser ? <SkeletonLoader /> : <h4 className='m-0 username'>{user?.user_metadata.username}</h4>}
 
       <div className='d-flex flex-column mt-4 text-center text-white'>
-        <div className='user-btn p-1 rounded' onClick={redirectToMyProfile}>
+        <div className='user-btn p-1 rounded' onClick={redirectToProfile}>
           My profile
         </div>
         <div className='user-btn p-1 mt-2 rounded' onClick={handleSignOut}>

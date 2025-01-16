@@ -1,7 +1,9 @@
 import { JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBlogImageQuery } from 'src/api/blogs';
 import { useGetCurrentUserImageQuery, useGetUserByIdQuery } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
+import { pageConfig } from 'src/config/pages';
 import { Blog } from 'src/types/types';
 import { formatDate } from 'src/utils/formatDate';
 
@@ -10,6 +12,8 @@ type Props = {
 };
 
 export const BlogCard = ({ blog }: Props): JSX.Element => {
+  const navigate = useNavigate();
+
   const { data: url, isLoading: isLoadingImg } = useBlogImageQuery(blog.image_url as string, {
     enabled: !!blog.image_url,
   });
@@ -31,7 +35,10 @@ export const BlogCard = ({ blog }: Props): JSX.Element => {
         <h3 className='title my-2'>{blog.title}</h3>
         <p className='description m-0 scroll-container-y'>{blog.description}</p>
         {user && (
-          <div className='d-flex flex-row'>
+          <div
+            className='d-flex flex-row user-info'
+            onClick={() => navigate(`${pageConfig.profile}?userId=${user.user_id}`)}
+          >
             <img
               className='object-fit-cover rounded-circle user-icon'
               src={userImg ?? '/empty-pfp.png'}

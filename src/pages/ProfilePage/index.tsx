@@ -2,29 +2,39 @@ import { useGetUserBlogsQuery } from 'src/api/blogs';
 import {
   useGetCurrentUserImageQuery,
   useGetCurrentUserQuery,
+  useGetUserByIdQuery,
   useUpdateUserPublicInfo,
   useUploadUserImage,
 } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { BlogsList } from 'src/components/BlogsList';
 import { Blog } from 'src/types/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
 import { JSX, useState } from 'react';
 import { WindowWrapper } from 'src/components/WindowWrapper';
 import { FormField } from 'src/components/FormField';
 import { SUPABASE_URL } from 'src/utils/constants';
+import { ThemeBtn } from 'src/components/ThemeBtn';
 
 export const ProfilePage = (): JSX.Element => {
   const navigate = useNavigate();
 
-  const { data: user, isLoading: isLoadingUser } = useGetCurrentUserQuery();
+  const [searchParams] = useSearchParams();
 
-  const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(user?.id ?? '', {
-    enabled: !!user?.id,
+  const userId = searchParams.get('userId') ?? '';
+
+  if (!userId) navigate(pageConfig.redirect);
+
+  const { data: ownUser } = useGetCurrentUserQuery();
+
+  const { data: user, isLoading: isLoadingUser } = useGetUserByIdQuery(userId);
+
+  const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(userId, {
+    enabled: !!userId,
   });
 
-  const { data: userBlogs, isLoading: isLoadingUserBlogs } = useGetUserBlogsQuery(user?.id ?? '');
+  const { data: userBlogs, isLoading: isLoadingUserBlogs } = useGetUserBlogsQuery(userId);
 
   const { mutateAsync: updateUserPublicData } = useUpdateUserPublicInfo();
 
@@ -34,22 +44,24 @@ export const ProfilePage = (): JSX.Element => {
   const [newUsername, setNewUsername] = useState('');
   const [newPfp, setNewPfp] = useState<File | null>(null);
 
+  const isOwnUser = ownUser?.id === userId;
+
   const handleSave = () => {
-    if (!user) return;
+    if (!userId) return;
 
     if (newPfp) {
       uploadUserImage({
-        userId: user.id,
-        email: user.email as string,
+        userId,
+        email: user?.email as string,
         file: newPfp,
       });
     }
 
     updateUserPublicData({
-      email: user.email as string,
-      username: newUsername ? newUsername : (user.user_metadata.username as string),
-      userId: user.id,
-      imageUrl: `${SUPABASE_URL}/storage/v1/object/public/images/pfp/${user.email}?t=${Date.now()}`,
+      email: user?.email as string,
+      username: newUsername ? newUsername : (user?.username as string),
+      userId,
+      imageUrl: `${SUPABASE_URL}/storage/v1/object/public/images/pfp/${user?.email}?t=${Date.now()}`,
     });
 
     setNewUsername('');
@@ -112,13 +124,17 @@ export const ProfilePage = (): JSX.Element => {
           </div>
         </WindowWrapper>
       )}
-      <div className='d-flex user-content align-items-center px-2 w-100 position-relative'>
-        <div
-          onClick={() => navigate(pageConfig.main)}
-          className='btn back-btn mt-3 me-3 p-2 text-white d-flex justify-content-center align-items-center position-absolute'
-        >
-          &lt; Back
+      <div className='d-flex user-content align-items-center px-3 w-100 position-relative'>
+        <div className='d-flex btn-container flex-row align-items-center position-absolute'>
+          <div
+            onClick={() => navigate(pageConfig.main)}
+            className='btn mt-3 me-3 p-2 text-white d-flex justify-content-center align-items-center'
+          >
+            &lt; Back
+          </div>
+          <ThemeBtn />
         </div>
+
         {isLoadingUserImg || !userImg ? (
           <SkeletonLoader />
         ) : (
@@ -134,16 +150,18 @@ export const ProfilePage = (): JSX.Element => {
         )}
         <div className='d-flex flex-column user-info w-100 justify-content-between ms-2'>
           <div className='user-info-text'>
-            {isLoadingUser ? <SkeletonLoader /> : <p className='m-0'>{user?.user_metadata.username}</p>}
+            {isLoadingUser ? <SkeletonLoader /> : <p className='m-0'>{user?.username}</p>}
             {isLoadingUser ? <SkeletonLoader /> : <p className='m-0'>Email: {user?.email}</p>}
           </div>
 
-          <div
-            className='btn p-2 text-white d-flex justify-content-center align-items-center'
-            onClick={() => setIsEdit(true)}
-          >
-            Edit info
-          </div>
+          {isOwnUser && (
+            <div
+              className='btn p-2 text-white d-flex justify-content-center align-items-center'
+              onClick={() => setIsEdit(true)}
+            >
+              Edit info
+            </div>
+          )}
         </div>
       </div>
       <div className='d-flex flex-row w-100 h-100 blogs-container scroll-container-y'>
