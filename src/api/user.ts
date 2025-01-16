@@ -8,22 +8,56 @@ import {
 } from '@tanstack/react-query';
 import { supabase } from 'src';
 import {
+  BLOG_GET_USER_BLOGS_QUERY,
   USER_GET_BY_ID,
   USER_GOOGLE_SIGN_IN,
   USER_IMAGE_QUERY,
-  USER_IMAGE_UPLOAD,
   USER_LOGIN,
   USER_MUTATION,
   USER_QUERY,
   USER_SIGN_OUT,
   USER_SIGN_UP,
-  USER_UPDATE_METADATA,
+  USER_UPDATE_PUBLIC_DATA,
+  USER_UPLOAD_USER_IMAGE,
 } from './constants';
 import { useContext } from 'react';
 import { LoginContext } from 'src/pages/LoginPage';
 import { User } from '@supabase/supabase-js';
 import { pageConfig } from 'src/config/pages';
 import { PublicUser } from 'src/types/types';
+import { SUPABASE_URL } from 'src/utils/constants';
+
+const updatePublicData = async ({
+  email,
+  userId,
+  username,
+  imageUrl,
+}: {
+  email: string;
+  userId: string;
+  username: string;
+  imageUrl: string;
+}): Promise<void> => {
+  const { error } = await supabase.from('users').upsert({
+    email,
+    user_id: userId,
+    username,
+    image_url: imageUrl,
+  });
+
+  if (error) throw new Error(error.message);
+};
+
+const uploadUserImage = async (email: string, file: File) => {
+  await supabase.storage.from('images').remove([`pfp/${email}`]);
+
+  const { error } = await supabase.storage.from('images').upload(`pfp/${email}`, file, {
+    cacheControl: '0',
+    upsert: true,
+  });
+
+  if (error) throw new Error(error.stack);
+};
 
 const login = async ({ email, password }: { email: string; password: string }): Promise<void> => {
   const { error } = await supabase.auth.signInWithPassword({
@@ -34,22 +68,18 @@ const login = async ({ email, password }: { email: string; password: string }): 
   if (error) throw new Error(error.message);
 };
 
-const uploadUserPublicData = async (email: string, username: string, userId: string): Promise<void> => {
-  const { error } = await supabase.from('users').insert({ email, username, user_id: userId });
-
-  if (error) throw new Error(error.message);
-};
-
 const signUp = async ({
   email,
   password,
   optionalData,
+  file,
 }: {
   email: string;
   password: string;
   optionalData: {
     username: string;
   };
+  file: File | null;
 }): Promise<void> => {
   const {
     data: { user },
@@ -67,7 +97,16 @@ const signUp = async ({
 
   if (error) throw new Error(error.message);
 
-  if (user) uploadUserPublicData(email, optionalData.username, user.id);
+  if (user) {
+    if (file) await uploadUserImage(email, file);
+
+    await updatePublicData({
+      email,
+      username: optionalData.username,
+      userId: user.id,
+      imageUrl: `${SUPABASE_URL}/storage/v1/object/public/images/pfp/${email}`,
+    });
+  }
 };
 
 const getUser = async (): Promise<User | null> => {
@@ -81,21 +120,10 @@ const getUser = async (): Promise<User | null> => {
   return user;
 };
 
-const uploadImage = async ({ email, file }: { email: string; file: File }): Promise<void> => {
-  const { error } = await supabase.storage.from('images').upload(`pfp/${email}`, file, {
-    cacheControl: '3600',
-    upsert: true,
-  });
+const getUserImage = async (userId: string): Promise<string> => {
+  const { data } = await supabase.from('users').select().eq('user_id', userId);
 
-  if (error) throw new Error(error.stack);
-};
-
-const getUserImage = (email: string) => {
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('images').getPublicUrl(`pfp/${email}`);
-
-  return publicUrl;
+  return data?.[0].image_url ?? '';
 };
 
 const signInWithOAuth = async (): Promise<void> => {
@@ -109,7 +137,7 @@ const signInWithOAuth = async (): Promise<void> => {
   if (error) throw new Error(error.stack);
 };
 
-const updateUserMetadata = async (username: string): Promise<void> => {
+const updateUser = async (username: string, imageUrl?: string): Promise<void> => {
   const {
     data: { user },
     error,
@@ -119,15 +147,15 @@ const updateUserMetadata = async (username: string): Promise<void> => {
 
   if (error) throw new Error(error.stack);
 
-  if (user) uploadUserPublicData(user.email ?? '', username, user.id);
+  if (user) await updatePublicData({ email: user.email ?? '', username, userId: user.id, imageUrl: imageUrl ?? '' });
 };
 
-const getUserById = async (userId: string): Promise<PublicUser> => {
+const getUserById = async (userId: string): Promise<PublicUser | null> => {
   const { data, error } = await supabase.from('users').select().eq('user_id', userId);
 
   if (error) throw new Error(error.stack);
 
-  return data[0];
+  return data[0] ?? null;
 };
 
 const signOut = async (): Promise<void> => {
@@ -161,6 +189,7 @@ export const useSignUp = (): UseMutationResult<
     optionalData: {
       username: string;
     };
+    file: File | null;
   }
 > => {
   const { setLoginMessage } = useContext(LoginContext);
@@ -183,19 +212,16 @@ export const useGetUserQuery = (): UseQueryResult<User | null, Error> =>
     queryFn: getUser,
   });
 
-export const useUploadImage = (): UseMutationResult<void, Error, { email: string; file: File }> => {
-  return useMutation({
-    mutationFn: uploadImage,
-    mutationKey: [USER_MUTATION, USER_IMAGE_UPLOAD],
-  });
-};
-
-export const useGetUserImageQuery = (email: string): UseQueryResult<string, Error> =>
+export const useGetUserImageQuery = (
+  email: string,
+  options?: Partial<UseQueryOptions<string>>
+): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: [USER_IMAGE_QUERY, email],
-    queryFn: () => {
-      return getUserImage(email);
+    queryFn: async () => {
+      return await getUserImage(email);
     },
+    ...options,
   });
 
 export const useSignInWithGoogle = (): UseMutationResult<void, Error> => {
@@ -213,24 +239,30 @@ export const useSignInWithGoogle = (): UseMutationResult<void, Error> => {
   });
 };
 
-export const useUpdateUserMetadata = (): UseMutationResult<void, Error, { username: string }> => {
+export const useUpdateUserPublicData = (): UseMutationResult<
+  void,
+  Error,
+  { userId: string; username: string; email: string; imageUrl?: string }
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: [USER_MUTATION, USER_UPDATE_METADATA],
-    mutationFn: async ({ username }) => {
-      return await updateUserMetadata(username);
+    mutationKey: [USER_MUTATION, USER_UPDATE_PUBLIC_DATA],
+    mutationFn: async ({ username, imageUrl }) => {
+      return await updateUser(username, imageUrl);
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [USER_QUERY] });
+    onSettled: async (_, __, { email, userId }) => {
+      await queryClient.invalidateQueries({ queryKey: [USER_QUERY] });
+      await queryClient.invalidateQueries({ queryKey: [USER_GET_BY_ID, userId] });
+      await queryClient.invalidateQueries({ queryKey: [USER_IMAGE_QUERY, email] });
     },
   });
 };
 
-export const useUserByIdQuery = (
+export const useGetUserByIdQuery = (
   userId: string,
-  options?: Partial<UseQueryOptions<PublicUser>>
-): UseQueryResult<PublicUser, Error> =>
+  options?: Partial<UseQueryOptions<PublicUser | null>>
+): UseQueryResult<PublicUser | null, Error> =>
   useQuery({
     queryKey: [USER_GET_BY_ID, userId],
     queryFn: async () => {
@@ -243,5 +275,21 @@ export const useSignOut = (): UseMutationResult<void, Error, void, unknown> => {
   return useMutation({
     mutationKey: [USER_MUTATION, USER_SIGN_OUT],
     mutationFn: signOut,
+  });
+};
+
+export const useUploadUserImage = (): UseMutationResult<void, Error, { userId: string; email: string; file: File }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ email, file }) => {
+      await uploadUserImage(email, file);
+    },
+    mutationKey: [USER_MUTATION, USER_UPLOAD_USER_IMAGE],
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: [USER_IMAGE_QUERY] });
+      await queryClient.invalidateQueries({ queryKey: [BLOG_GET_USER_BLOGS_QUERY] });
+    },
   });
 };

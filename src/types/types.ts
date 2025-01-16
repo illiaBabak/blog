@@ -8,8 +8,8 @@ export type Blog = {
 };
 
 export type PublicUser = {
-  email: string | null;
-  id: number;
   user_id: string;
+  email: string | null;
   username: string | null;
+  image_url: string | null;
 };

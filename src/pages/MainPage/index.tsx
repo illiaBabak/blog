@@ -1,9 +1,10 @@
-import { BlogsList } from 'src/pages/MainPage/components/BlogsList';
+import { BlogsList } from 'src/components/BlogsList';
 import { Header } from 'src/pages/MainPage/components/Header';
 import { UserInfo } from './components/UserInfo';
 import { UserOperations } from './components/UserOperations';
 import { createContext, useState } from 'react';
 import { CreateBlogWindow } from './components/CreateBlogWindow';
+import { useBlogsQuery } from 'src/api/blogs';
 
 type MainPageContextType = {
   setShouldShowCreateWindow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,6 +19,8 @@ export const MainPageContext = createContext<MainPageContextType>({
 export const MainPage = (): JSX.Element => {
   const [shouldShowCreateWindow, setShouldShowCreateWindow] = useState(false);
 
+  const { data: blogs, isLoading: isLoadingBlogs } = useBlogsQuery();
+
   return (
     <MainPageContext.Provider value={{ setShouldShowCreateWindow }}>
       <div className='d-flex flex-column main-page'>
@@ -27,7 +30,7 @@ export const MainPage = (): JSX.Element => {
             <UserInfo />
             <UserOperations />
           </div>
-          <BlogsList />
+          {isLoadingBlogs || (blogs && <BlogsList isLoading={isLoadingBlogs} blogs={blogs} />)}
         </div>
 
         {shouldShowCreateWindow && <CreateBlogWindow />}

@@ -1,0 +1,89 @@
+.profile-page {
+  .btn {
+    width: 120px;
+    height: 32px;
+    background-color: var(--accent);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+
+    .disabled {
+      filter: grayscale(50%);
+      opacity: 0.8;
+    }
+  }
+
+  .edit-window {
+    width: 580px;
+    height: 430px;
+    background-color: var(--main);
+    cursor: default;
+
+    .close-btn {
+      width: 28px;
+      height: 28px;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+
+      &:hover {
+        transform: translate(1.05);
+        transition: 0.33s;
+      }
+    }
+
+    .input-file-wrapper {
+      cursor: pointer;
+
+      .new-pfp,
+      .input-file {
+        width: 110px;
+        height: 110px;
+        cursor: pointer;
+      }
+
+      .input-file {
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
+    }
+  }
+
+  .user-content {
+    min-height: 220px;
+    max-height: 220px;
+    border-bottom: 2px solid var(--main);
+
+    .skeleton-loader,
+    .user-icon {
+      min-width: 180px;
+      max-width: 180px;
+      height: 180px;
+    }
+
+    .user-info {
+      height: 180px;
+    }
+
+    .user-info-text {
+      .skeleton-loader {
+        width: 250px;
+        height: 20px;
+        margin-bottom: 8px;
+      }
+    }
+
+    .back-btn {
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .blogs-container {
+    background-color: var(--main);
+  }
+}

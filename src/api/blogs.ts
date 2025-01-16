@@ -1,5 +1,5 @@
 import { UseMutationResult, UseQueryResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BLOGS_QUERY, BLOG_CREATE_BLOG, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
+import { BLOGS_QUERY, BLOG_CREATE_BLOG, BLOG_GET_USER_BLOGS_QUERY, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
 
@@ -41,6 +41,18 @@ const createBlog = async (title: string, description: string, image: File | null
   if (image) uploadBlogImage(image, imageKey);
 };
 
+const getUserBlogs = async (userId: string): Promise<Blog[]> => {
+  const { data, error } = await supabase
+    .from('blogs')
+    .select()
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.stack);
+
+  return data ?? [];
+};
+
 export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   useQuery({
     queryKey: [BLOGS_QUERY],
@@ -73,3 +85,11 @@ export const useCreateBlog = (): UseMutationResult<
     },
   });
 };
+
+export const useGetUserBlogsQuery = (userId: string): UseQueryResult<Blog[], Error> =>
+  useQuery({
+    queryKey: [BLOG_GET_USER_BLOGS_QUERY, userId],
+    queryFn: async () => {
+      return await getUserBlogs(userId);
+    },
+  });

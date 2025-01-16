@@ -1,60 +1,51 @@
-.wrapper {
-  width: 100vw;
-  height: 100vh;
-  background-color: #4a494e66;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.create-blog-window {
+  width: 580px;
+  height: 630px;
+  background-color: var(--main);
 
-  .window {
-    width: 580px;
-    height: 630px;
-    background-color: var(--main);
-
-    .img-wrapper {
-      .blog-img,
-      .file-input {
-        height: 260px;
-        cursor: pointer;
-      }
-
-      .file-input {
-        opacity: 0;
-      }
+  .img-wrapper {
+    .blog-img,
+    .file-input {
+      height: 260px;
+      cursor: pointer;
     }
 
-    .hide-btn {
-      right: 0;
-      top: 0;
-      width: 24px;
-      height: 24px;
-      font-size: 28px;
-      cursor: pointer;
+    .file-input {
+      opacity: 0;
+    }
+  }
 
-      &:hover {
-        transform: scale(1.05);
-        transition: 0.33s;
-      }
+  .hide-btn {
+    right: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    font-size: 28px;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+
+  .create-btn-wrapper {
+    width: 320px;
+    height: 42px;
+    background-color: var(--accent);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
     }
 
-    .create-btn-wrapper {
-      width: 320px;
-      height: 42px;
-      background-color: var(--accent);
-      cursor: pointer;
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
 
-      &:hover {
-        transform: scale(1.05);
-        transition: 0.33s;
-      }
-
-      &.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-
-        .create-btn {
-          pointer-events: none;
-        }
+      .create-btn {
+        pointer-events: none;
       }
     }
   }

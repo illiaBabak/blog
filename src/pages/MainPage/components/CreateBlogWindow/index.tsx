@@ -3,6 +3,7 @@ import { MainPageContext } from '../..';
 import { FormField } from 'src/components/FormField';
 import { useCreateBlog } from 'src/api/blogs';
 import { generateKey } from 'src/utils/generateKey';
+import { WindowWrapper } from 'src/components/WindowWrapper';
 
 export const CreateBlogWindow = (): JSX.Element => {
   const { setShouldShowCreateWindow } = useContext(MainPageContext);
@@ -24,12 +25,9 @@ export const CreateBlogWindow = (): JSX.Element => {
   const shouldCreate = !!title.length && !!description.length;
 
   return (
-    <div
-      className='wrapper position-absolute d-flex justify-content-center align-items-center overflow-hidden'
-      onClick={hideWindow}
-    >
+    <WindowWrapper onClose={hideWindow}>
       <div
-        className='window text-center d-flex flex-column align-items-center rounded position-relative'
+        className='create-blog-window text-center d-flex flex-column align-items-center rounded position-relative'
         onClick={(e) => e.stopPropagation()}
       >
         <h4 className='m-0 mt-3'>Create your own blog!</h4>
@@ -80,6 +78,6 @@ export const CreateBlogWindow = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </WindowWrapper>
   );
 };

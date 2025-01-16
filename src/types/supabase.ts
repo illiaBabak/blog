@@ -50,17 +50,41 @@ export type Database = {
         };
         Relationships: [];
       };
+      comments: {
+        Row: {
+          blog_id: number | null;
+          created_at: string;
+          id: number;
+          text: string | null;
+          user_id: string | null;
+        };
+        Insert: {
+          blog_id?: number | null;
+          created_at?: string;
+          id?: number;
+          text?: string | null;
+          user_id?: string | null;
+        };
+        Update: {
+          blog_id?: number | null;
+          created_at?: string;
+          id?: number;
+          text?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       users: {
         Row: PublicUser;
         Insert: {
           email?: string | null;
-          id?: number;
+          image_url?: string | null;
           user_id: string;
           username?: string | null;
         };
         Update: {
           email?: string | null;
-          id?: number;
+          image_url?: string | null;
           user_id?: string;
           username?: string | null;
         };

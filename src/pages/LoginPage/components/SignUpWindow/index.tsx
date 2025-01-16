@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { FormField } from 'src/components/FormField';
-import { useSignUp, useUploadImage } from 'src/api/user';
+import { useSignUp } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
@@ -24,7 +24,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [shouldConfirmEmail, setShouldConfirmEmail] = useState(false);
-  const [pfp, setPfp] = useState<File | null>();
+  const [pfp, setPfp] = useState<File | null>(null);
 
   const isIdenticalPasswords = password === confirmedPassword;
 
@@ -32,8 +32,6 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
 
   const shouldSignUp =
     username && email && password && confirmedPassword && isIdenticalPasswords && passwordCorectLength;
-
-  const { mutateAsync: uploadUserImage } = useUploadImage();
 
   const { mutateAsync: signUp } = useSignUp();
 
@@ -43,7 +41,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
       return;
     }
 
-    signUp({ email, password, optionalData: { username } });
+    signUp({ email, password, optionalData: { username }, file: pfp });
     setShouldConfirmEmail(true);
     setShouldClickSignUpBtn(false);
   };
@@ -64,10 +62,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
     const channel = new BroadcastChannel('auth_channel');
 
     const handleMessage = ({ data: { type } }: MessageEvent<AuthMessage>) => {
-      if (type === 'VERIFIED' && pfp) {
-        uploadUserImage({ email: email.split('@')[0], file: pfp });
-        navigate(pageConfig.main);
-      }
+      if (type === 'VERIFIED') navigate(pageConfig.main);
     };
 
     channel.addEventListener('message', handleMessage);
@@ -76,7 +71,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
       channel.removeEventListener('message', handleMessage);
       channel.close();
     };
-  }, [navigate, pfp, email, uploadUserImage]);
+  }, [navigate]);
 
   return (
     <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between'>
