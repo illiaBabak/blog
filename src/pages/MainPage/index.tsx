@@ -2,7 +2,7 @@ import { BlogsList } from 'src/components/BlogsList';
 import { Header } from 'src/pages/MainPage/components/Header';
 import { UserInfo } from './components/UserInfo';
 import { UserOperations } from './components/UserOperations';
-import { createContext, useState } from 'react';
+import { createContext, JSX, useState } from 'react';
 import { CreateBlogWindow } from './components/CreateBlogWindow';
 import { useBlogsQuery } from 'src/api/blogs';
 

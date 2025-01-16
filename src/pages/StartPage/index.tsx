@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 import { pageConfig } from 'src/config/pages';

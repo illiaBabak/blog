@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { JSX, useContext } from 'react';
 import { MainPageContext } from '../..';
 
 export const UserOperations = (): JSX.Element => {

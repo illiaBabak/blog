@@ -1,7 +1,7 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, JSX, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
-import { Confirm } from 'src/pages/ConfirmPage';
+import { ConfirmPage } from 'src/pages/ConfirmPage';
 import { LoginPage } from 'src/pages/LoginPage';
 import { MainPage } from 'src/pages/MainPage';
 import { ProfilePage } from 'src/pages/ProfilePage';
@@ -52,7 +52,7 @@ export const App = (): JSX.Element => {
             <Route path={login} element={<LoginPage />} />
             <Route path={redirect} element={<RedirectPage />} />
             <Route path={main} element={<MainPage />} />
-            <Route path={confirm} element={<Confirm />} />
+            <Route path={confirm} element={<ConfirmPage />} />
             <Route path={profile} element={<ProfilePage />} />
           </Routes>
         </BrowserRouter>

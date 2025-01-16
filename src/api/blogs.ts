@@ -1,5 +1,12 @@
-import { UseMutationResult, UseQueryResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BLOGS_QUERY, BLOG_CREATE_BLOG, BLOG_GET_USER_BLOGS_QUERY, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
+import {
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { BLOGS_QUERY, CREATE_NEW_BLOG, GET_USER_BLOGS_QUERY, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
 
@@ -11,9 +18,7 @@ const getBlogs = async (): Promise<Blog[]> => {
   return data;
 };
 
-const getBlogImage = (url: string | null): string | null => {
-  if (!url) return null;
-
+const getBlogImage = (url: string): string => {
   const {
     data: { publicUrl },
   } = supabase.storage.from('images').getPublicUrl(`blogs/${url}`);
@@ -21,34 +26,36 @@ const getBlogImage = (url: string | null): string | null => {
   return publicUrl;
 };
 
-const uploadBlogImage = async (image: File, imageKey: string) => {
-  const { error } = await supabase.storage.from('images').upload(`blogs/${imageKey}`, image, {
-    cacheControl: '3600',
-    upsert: true,
-  });
-
-  if (error) throw new Error(error.stack);
-};
-
-const createBlog = async (title: string, description: string, image: File | null, imageKey: string): Promise<void> => {
-  const { error } = await supabase
+const createBlog = async (
+  title: string,
+  description: string,
+  imgData: { image: File; imageKey: string } | null
+): Promise<void> => {
+  const { error: createBlogError } = await supabase
     .from('blogs')
-    .insert({ title, description, image_url: image ? imageKey : null })
+    .insert({ title, description, image_url: imgData ? imgData.imageKey : null })
     .select();
 
-  if (error) throw new Error(error.stack);
+  if (createBlogError) throw new Error(createBlogError.stack);
 
-  if (image) uploadBlogImage(image, imageKey);
+  if (!imgData) return;
+
+  const { error: uploadImageError } = await supabase.storage
+    .from('images')
+    .upload(`blogs/${imgData.imageKey}`, imgData.image, {
+      cacheControl: '3600',
+      upsert: true,
+    });
+
+  if (uploadImageError) throw new Error(uploadImageError.stack);
 };
 
 const getUserBlogs = async (userId: string): Promise<Blog[]> => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('blogs')
     .select()
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
-
-  if (error) throw new Error(error.stack);
 
   return data ?? [];
 };
@@ -59,37 +66,35 @@ export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
     queryFn: getBlogs,
   });
 
-export const useBlogImageQuery = (url: string | null): UseQueryResult<string | null, Error> =>
+export const useBlogImageQuery = (
+  url: string,
+  options?: Partial<UseQueryOptions<string>>
+): UseQueryResult<string, Error> =>
   useQuery({
     queryKey: [BLOG_IMAGE_QUERY, url],
-    queryFn: () => {
-      return getBlogImage(url);
-    },
+    queryFn: () => getBlogImage(url),
+    ...options,
   });
 
 export const useCreateBlog = (): UseMutationResult<
   void,
   Error,
-  { title: string; description: string; image: File | null; imageKey: string }
+  { title: string; description: string; imgData: { image: File; imageKey: string } | null }
 > => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: [BLOG_MUTATION, BLOG_CREATE_BLOG],
-    mutationFn: async ({ title, description, image, imageKey }) => {
-      return await createBlog(title, description, image, imageKey);
-    },
-    onSettled: (_, __, { imageKey }) => {
+    mutationKey: [BLOG_MUTATION, CREATE_NEW_BLOG],
+    mutationFn: async ({ title, description, imgData }) => await createBlog(title, description, imgData),
+    onSettled: (_, __, { imgData }) => {
       queryClient.invalidateQueries({ queryKey: [BLOGS_QUERY] });
-      queryClient.invalidateQueries({ queryKey: [BLOG_IMAGE_QUERY, imageKey] });
+      queryClient.invalidateQueries({ queryKey: [BLOG_IMAGE_QUERY, imgData?.imageKey] });
     },
   });
 };
 
 export const useGetUserBlogsQuery = (userId: string): UseQueryResult<Blog[], Error> =>
   useQuery({
-    queryKey: [BLOG_GET_USER_BLOGS_QUERY, userId],
-    queryFn: async () => {
-      return await getUserBlogs(userId);
-    },
+    queryKey: [GET_USER_BLOGS_QUERY, userId],
+    queryFn: async () => await getUserBlogs(userId),
   });

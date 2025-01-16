@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { JSX, useContext } from 'react';
 import { GlobalContext } from 'src/root';
 
 export const ThemeBtn = (): JSX.Element => {

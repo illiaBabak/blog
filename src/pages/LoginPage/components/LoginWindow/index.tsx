@@ -1,10 +1,10 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, JSX, useContext, useEffect, useState } from 'react';
 import { FormField } from 'src/components/FormField';
 import { useLogin, useSignInWithGoogle } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
-import { validateEmail } from 'src/utils/validateEmail';
+import { isValidEmail } from 'src/utils/isValidEmail';
 
 type Props = {
   setToSignUp: () => void;
@@ -12,6 +12,7 @@ type Props = {
 
 export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
   const { loginMessage, isSuccesedLogin, setLoginMessage } = useContext(LoginContext);
+
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -22,15 +23,13 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
   const { mutateAsync: signInWithGoogle } = useSignInWithGoogle();
 
   const handleLogin = () => {
-    if (!validateEmail(email)) {
+    if (!isValidEmail(email)) {
       setLoginMessage('Email is not valid!');
       return;
     }
 
     login({ email, password });
   };
-
-  const shouldLogin = email && password;
 
   useEffect(() => {
     if (isSuccesedLogin) navigate(pageConfig.main);
@@ -56,7 +55,7 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
       </div>
       <p className='error-text mb-0'>{loginMessage ? loginMessage : ''}</p>
       <div className='d-flex flex-column text-center mt-3'>
-        <div className={`btn-wrapper ${!shouldLogin ? 'disabled' : ''}`}>
+        <div className={`btn-wrapper ${!(email && password) ? 'disabled' : ''}`}>
           <div className='submit-btn text-white p-1 py-2 rounded' onClick={handleLogin}>
             Log in
           </div>

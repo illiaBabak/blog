@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { JSX, useRef, useState } from 'react';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 
 export const Header = (): JSX.Element => {

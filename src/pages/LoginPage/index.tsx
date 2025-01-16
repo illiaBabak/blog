@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, JSX, useEffect, useState } from 'react';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 import { LoginWindow } from 'src/pages/LoginPage/components/LoginWindow';
 import { SignUpWindow } from 'src/pages/LoginPage/components/SignUpWindow';

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { BlogCard } from 'src/components/BlogCard';
 import { Loader } from 'src/components/Loader';
 import { Blog } from 'src/types/types';

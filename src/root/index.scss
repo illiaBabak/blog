@@ -6,12 +6,12 @@
   width: 100vw;
 }
 
-.scroll-container-y {
-  overflow: hidden auto;
-}
-
 .scroll-container-x {
   overflow: auto hidden;
+}
+
+.scroll-container-y {
+  overflow: hidden auto;
 }
 
 .scroll-container-x::-webkit-scrollbar,

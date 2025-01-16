@@ -8,17 +8,17 @@ import {
 } from '@tanstack/react-query';
 import { supabase } from 'src';
 import {
-  BLOG_GET_USER_BLOGS_QUERY,
-  USER_GET_BY_ID,
+  GET_USER_BLOGS_QUERY,
+  GET_USER_BY_ID,
   USER_GOOGLE_SIGN_IN,
-  USER_IMAGE_QUERY,
+  CURRENT_USER_IMAGE_QUERY,
   USER_LOGIN,
   USER_MUTATION,
-  USER_QUERY,
+  CURRENT_USER_QUERY,
   USER_SIGN_OUT,
   USER_SIGN_UP,
-  USER_UPDATE_PUBLIC_DATA,
-  USER_UPLOAD_USER_IMAGE,
+  USER_UPDATE_PUBLIC_INFO,
+  USER_UPLOAD_IMAGE,
 } from './constants';
 import { useContext } from 'react';
 import { LoginContext } from 'src/pages/LoginPage';
@@ -27,7 +27,7 @@ import { pageConfig } from 'src/config/pages';
 import { PublicUser } from 'src/types/types';
 import { SUPABASE_URL } from 'src/utils/constants';
 
-const updatePublicData = async ({
+const updateUserPublicInfo = async ({
   email,
   userId,
   username,
@@ -36,19 +36,19 @@ const updatePublicData = async ({
   email: string;
   userId: string;
   username: string;
-  imageUrl: string;
+  imageUrl: string | null;
 }): Promise<void> => {
   const { error } = await supabase.from('users').upsert({
     email,
     user_id: userId,
     username,
-    image_url: imageUrl,
+    image_url: imageUrl ?? '',
   });
 
   if (error) throw new Error(error.message);
 };
 
-const uploadUserImage = async (email: string, file: File) => {
+const uploadUserImage = async (email: string, file: File): Promise<void> => {
   await supabase.storage.from('images').remove([`pfp/${email}`]);
 
   const { error } = await supabase.storage.from('images').upload(`pfp/${email}`, file, {
@@ -97,19 +97,18 @@ const signUp = async ({
 
   if (error) throw new Error(error.message);
 
-  if (user) {
-    if (file) await uploadUserImage(email, file);
+  if (file) await uploadUserImage(email, file);
 
-    await updatePublicData({
+  if (user)
+    await updateUserPublicInfo({
       email,
       username: optionalData.username,
       userId: user.id,
       imageUrl: `${SUPABASE_URL}/storage/v1/object/public/images/pfp/${email}`,
     });
-  }
 };
 
-const getUser = async (): Promise<User | null> => {
+const getCurrentUser = async (): Promise<User | null> => {
   const {
     data: { user },
     error,
@@ -120,13 +119,13 @@ const getUser = async (): Promise<User | null> => {
   return user;
 };
 
-const getUserImage = async (userId: string): Promise<string> => {
+const getCurrentUserImage = async (userId: string): Promise<string | null> => {
   const { data } = await supabase.from('users').select().eq('user_id', userId);
 
-  return data?.[0].image_url ?? '';
+  return data?.[0].image_url ?? null;
 };
 
-const signInWithOAuth = async (): Promise<void> => {
+const signInWithGoogle = async (): Promise<void> => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -137,7 +136,7 @@ const signInWithOAuth = async (): Promise<void> => {
   if (error) throw new Error(error.stack);
 };
 
-const updateUser = async (username: string, imageUrl?: string): Promise<void> => {
+const updateUser = async (username: string, imageUrl: string | null): Promise<void> => {
   const {
     data: { user },
     error,
@@ -147,7 +146,7 @@ const updateUser = async (username: string, imageUrl?: string): Promise<void> =>
 
   if (error) throw new Error(error.stack);
 
-  if (user) await updatePublicData({ email: user.email ?? '', username, userId: user.id, imageUrl: imageUrl ?? '' });
+  if (user) await updateUserPublicInfo({ email: user.email ?? '', username, userId: user.id, imageUrl });
 };
 
 const getUserById = async (userId: string): Promise<PublicUser | null> => {
@@ -206,21 +205,22 @@ export const useSignUp = (): UseMutationResult<
   });
 };
 
-export const useGetUserQuery = (): UseQueryResult<User | null, Error> =>
+export const useGetCurrentUserQuery = (): UseQueryResult<User | null, Error> =>
   useQuery({
-    queryKey: [USER_QUERY],
-    queryFn: getUser,
+    queryKey: [CURRENT_USER_QUERY],
+    queryFn: getCurrentUser,
   });
 
-export const useGetUserImageQuery = (
-  email: string,
-  options?: Partial<UseQueryOptions<string>>
-): UseQueryResult<string, Error> =>
+export const useGetCurrentUserImageQuery = (
+  userId: string,
+  options?: Partial<UseQueryOptions<string | null>>
+): UseQueryResult<string | null, Error> =>
   useQuery({
-    queryKey: [USER_IMAGE_QUERY, email],
+    queryKey: [CURRENT_USER_IMAGE_QUERY, userId],
     queryFn: async () => {
-      return await getUserImage(email);
+      return await getCurrentUserImage(userId);
     },
+    staleTime: 0,
     ...options,
   });
 
@@ -229,7 +229,7 @@ export const useSignInWithGoogle = (): UseMutationResult<void, Error> => {
 
   return useMutation({
     mutationKey: [USER_MUTATION, USER_GOOGLE_SIGN_IN],
-    mutationFn: signInWithOAuth,
+    mutationFn: signInWithGoogle,
     onSuccess: () => {
       setLoginMessage(null);
     },
@@ -239,22 +239,20 @@ export const useSignInWithGoogle = (): UseMutationResult<void, Error> => {
   });
 };
 
-export const useUpdateUserPublicData = (): UseMutationResult<
+export const useUpdateUserPublicInfo = (): UseMutationResult<
   void,
   Error,
-  { userId: string; username: string; email: string; imageUrl?: string }
+  { userId: string; username: string; email: string; imageUrl: string | null }
 > => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: [USER_MUTATION, USER_UPDATE_PUBLIC_DATA],
-    mutationFn: async ({ username, imageUrl }) => {
-      return await updateUser(username, imageUrl);
-    },
+    mutationKey: [USER_MUTATION, USER_UPDATE_PUBLIC_INFO],
+    mutationFn: async ({ username, imageUrl }) => await updateUser(username, imageUrl),
     onSettled: async (_, __, { email, userId }) => {
-      await queryClient.invalidateQueries({ queryKey: [USER_QUERY] });
-      await queryClient.invalidateQueries({ queryKey: [USER_GET_BY_ID, userId] });
-      await queryClient.invalidateQueries({ queryKey: [USER_IMAGE_QUERY, email] });
+      await queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY] });
+      await queryClient.invalidateQueries({ queryKey: [GET_USER_BY_ID, userId] });
+      await queryClient.invalidateQueries({ queryKey: [CURRENT_USER_IMAGE_QUERY, email] });
     },
   });
 };
@@ -264,32 +262,28 @@ export const useGetUserByIdQuery = (
   options?: Partial<UseQueryOptions<PublicUser | null>>
 ): UseQueryResult<PublicUser | null, Error> =>
   useQuery({
-    queryKey: [USER_GET_BY_ID, userId],
-    queryFn: async () => {
-      return await getUserById(userId);
-    },
+    queryKey: [GET_USER_BY_ID, userId],
+    queryFn: async () => await getUserById(userId),
     ...options,
   });
 
-export const useSignOut = (): UseMutationResult<void, Error, void, unknown> => {
-  return useMutation({
+export const useSignOut = (): UseMutationResult<void, Error, void, unknown> =>
+  useMutation({
     mutationKey: [USER_MUTATION, USER_SIGN_OUT],
     mutationFn: signOut,
   });
-};
 
 export const useUploadUserImage = (): UseMutationResult<void, Error, { userId: string; email: string; file: File }> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ email, file }) => {
-      await uploadUserImage(email, file);
+      return await uploadUserImage(email, file);
     },
-    mutationKey: [USER_MUTATION, USER_UPLOAD_USER_IMAGE],
-
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: [USER_IMAGE_QUERY] });
-      await queryClient.invalidateQueries({ queryKey: [BLOG_GET_USER_BLOGS_QUERY] });
+    mutationKey: [USER_MUTATION, USER_UPLOAD_IMAGE],
+    onSettled: (_, __, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: [CURRENT_USER_IMAGE_QUERY, userId], refetchType: 'all' });
+      queryClient.invalidateQueries({ queryKey: [GET_USER_BLOGS_QUERY], refetchType: 'all' });
     },
   });
 };

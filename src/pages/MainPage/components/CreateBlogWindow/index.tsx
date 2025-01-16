@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { JSX, useContext, useState } from 'react';
 import { MainPageContext } from '../..';
 import { FormField } from 'src/components/FormField';
 import { useCreateBlog } from 'src/api/blogs';
@@ -13,12 +13,18 @@ export const CreateBlogWindow = (): JSX.Element => {
   const [description, setDescription] = useState('');
 
   const { mutateAsync: createBlog } = useCreateBlog();
+
   const hideWindow = () => setShouldShowCreateWindow(false);
 
   const createBlogHandle = () => {
-    const imageKey = generateKey(16);
+    const imgData = blogImg
+      ? {
+          image: blogImg,
+          imageKey: generateKey(16),
+        }
+      : null;
 
-    createBlog({ title, description, image: blogImg, imageKey });
+    createBlog({ title, description, imgData });
     hideWindow();
   };
 

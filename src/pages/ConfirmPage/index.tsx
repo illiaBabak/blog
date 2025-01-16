@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, JSX } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from 'src';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 
-export const Confirm = (): JSX.Element => {
+export const ConfirmPage = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {

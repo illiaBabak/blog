@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { JSX, useContext, useEffect, useState } from 'react';
 import { FormField } from 'src/components/FormField';
 import { useSignUp } from 'src/api/user';
 import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
-import { validateEmail } from 'src/utils/validateEmail';
+import { isValidEmail } from 'src/utils/isValidEmail';
 
 type AuthMessage = {
   type: 'VERIFIED';
@@ -16,6 +16,7 @@ type Props = {
 
 export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   const { loginMessage, setLoginMessage } = useContext(LoginContext);
+
   const navigate = useNavigate();
 
   const [shouldClickSignUpBtn, setShouldClickSignUpBtn] = useState(true); // State for handle multiple click on sign up btn
@@ -36,7 +37,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   const { mutateAsync: signUp } = useSignUp();
 
   const handleSignUp = () => {
-    if (!validateEmail(email)) {
+    if (!isValidEmail(email)) {
       setLoginMessage('Email is not valid!');
       return;
     }
@@ -46,6 +47,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
     setShouldClickSignUpBtn(false);
   };
 
+  // Timer to disabled sign up btn
   useEffect(() => {
     if (shouldClickSignUpBtn) return;
 
@@ -58,6 +60,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
     if (loginMessage) setShouldConfirmEmail(false);
   }, [loginMessage, setShouldConfirmEmail]);
 
+  // useEffect to check is confirm page has opened
   useEffect(() => {
     const channel = new BroadcastChannel('auth_channel');
 

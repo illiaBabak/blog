@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserImageQuery, useGetUserQuery, useSignOut, useUpdateUserPublicData } from 'src/api/user';
+import { useGetCurrentUserImageQuery, useGetCurrentUserQuery, useSignOut, useUpdateUserPublicInfo } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { pageConfig } from 'src/config/pages';
 import { isString } from 'src/utils/guards';
@@ -10,11 +10,13 @@ export const UserInfo = (): JSX.Element => {
 
   const [isDataUpdated, setIsDataUpdated] = useState(false);
 
-  const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
+  const { data: user, isLoading: isLoadingUser } = useGetCurrentUserQuery();
 
-  const { data: userImg, isLoading: isLoadingUserImg } = useGetUserImageQuery(user?.id ?? '', { enabled: !!user?.id }); // key of user image is local part of email
+  const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(user?.id ?? '', {
+    enabled: !!user?.id,
+  }); // key of user image is local part of email
 
-  const { mutateAsync: updateUserData } = useUpdateUserPublicData();
+  const { mutateAsync: updateUserInfo } = useUpdateUserPublicInfo();
 
   const { mutateAsync: signOut } = useSignOut();
 
@@ -34,12 +36,14 @@ export const UserInfo = (): JSX.Element => {
 
     const updateUser = async () => {
       try {
-        await updateUserData({
+        const username = isString(user?.user_metadata.username)
+          ? user.user_metadata.username
+          : (user?.email as string).split('@')[0];
+
+        await updateUserInfo({
           userId: user.id,
-          username: isString(user?.user_metadata.username)
-            ? user.user_metadata.username
-            : (user?.email as string).split('@')[0],
-          email: user?.email ?? '',
+          username,
+          email: user?.email as string,
           imageUrl: user?.user_metadata.picture as string,
         });
 
@@ -50,7 +54,7 @@ export const UserInfo = (): JSX.Element => {
     };
 
     updateUser();
-  }, [user, updateUserData, isDataUpdated, setIsDataUpdated, differenceBtwDates]);
+  }, [user, updateUserInfo, isDataUpdated, setIsDataUpdated, differenceBtwDates]);
 
   return (
     <div className='d-flex flex-column align-items-center user-info rounded'>

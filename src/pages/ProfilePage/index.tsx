@@ -1,11 +1,16 @@
 import { useGetUserBlogsQuery } from 'src/api/blogs';
-import { useGetUserImageQuery, useGetUserQuery, useUpdateUserPublicData, useUploadUserImage } from 'src/api/user';
+import {
+  useGetCurrentUserImageQuery,
+  useGetCurrentUserQuery,
+  useUpdateUserPublicInfo,
+  useUploadUserImage,
+} from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { BlogsList } from 'src/components/BlogsList';
 import { Blog } from 'src/types/types';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { WindowWrapper } from 'src/components/WindowWrapper';
 import { FormField } from 'src/components/FormField';
 import { SUPABASE_URL } from 'src/utils/constants';
@@ -13,13 +18,15 @@ import { SUPABASE_URL } from 'src/utils/constants';
 export const ProfilePage = (): JSX.Element => {
   const navigate = useNavigate();
 
-  const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
+  const { data: user, isLoading: isLoadingUser } = useGetCurrentUserQuery();
 
-  const { data: userImg, isLoading: isLoadingUserImg } = useGetUserImageQuery(user?.id ?? '', { enabled: !!user?.id });
+  const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(user?.id ?? '', {
+    enabled: !!user?.id,
+  });
 
   const { data: userBlogs, isLoading: isLoadingUserBlogs } = useGetUserBlogsQuery(user?.id ?? '');
 
-  const { mutateAsync: updateUserPublicData } = useUpdateUserPublicData();
+  const { mutateAsync: updateUserPublicData } = useUpdateUserPublicInfo();
 
   const { mutateAsync: uploadUserImage } = useUploadUserImage();
 
@@ -67,7 +74,7 @@ export const ProfilePage = (): JSX.Element => {
             <div className='input-file-wrapper position-relative mt-4'>
               <img
                 className='new-pfp object-fit-cover'
-                src={newPfp ? URL.createObjectURL(newPfp) : userImg}
+                src={newPfp ? URL.createObjectURL(newPfp) : (userImg ?? '/empty-pfp.png')}
                 alt='user-pfp'
                 onError={({ currentTarget }) => {
                   currentTarget.src = '/empty-pfp.png';
