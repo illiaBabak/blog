@@ -1,12 +1,22 @@
-import { JSX, useRef, useState } from 'react';
+import { JSX, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ThemeBtn } from 'src/components/ThemeBtn';
 
 export const Header = (): JSX.Element => {
-  const [searchText, setSearchText] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const searchedText = searchParams.get('query') ?? '';
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFocusInput = () => inputRef.current?.focus();
+
+  const handleClearParam = () => {
+    searchParams.delete('query');
+    setSearchParams(searchParams);
+
+    if (inputRef.current) inputRef.current.value = '';
+  };
 
   return (
     <div className='header w-100 d-flex flex-row align-items-center justify-content-between px-4 py-1'>
@@ -18,14 +28,18 @@ export const Header = (): JSX.Element => {
         >
           <img className='search-icon object-fit-contain' src='/search.png' alt='search-icon' />
           <input
+            ref={inputRef}
             className='search-input ps-2'
             type='text'
             placeholder='Search...'
-            value={searchText}
-            onChange={({ currentTarget: { value } }) => setSearchText(value)}
+            defaultValue={searchedText}
+            onBlur={({ currentTarget: { value } }) => (value ? setSearchParams({ query: value }) : handleClearParam())}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') e.currentTarget.blur();
+            }}
           />
-          {searchText && (
-            <div className='clear-btn fs-5 position-absolute' onClick={() => setSearchText('')}>
+          {searchedText && (
+            <div className='clear-btn fs-5 position-absolute' onClick={handleClearParam}>
               x
             </div>
           )}

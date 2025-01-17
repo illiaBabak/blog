@@ -13,6 +13,7 @@ import {
   BLOG_IMAGE_QUERY,
   BLOG_MUTATION,
   DELETE_BLOG,
+  SEARCH_BLOGS,
 } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
@@ -73,6 +74,22 @@ const deleteBlogs = async (ids: number[]): Promise<void> => {
   if (error) throw new Error(error.stack);
 };
 
+const getSearchedBlogs = async (searchedText: string): Promise<Blog[]> => {
+  const { data: searchedBlogsByTitle } = await supabase
+    .from('blogs')
+    .select()
+    .textSearch('title', `${searchedText.split(' ').join('|')}`);
+
+  const { data: searchedBlogsByDescription } = await supabase
+    .from('blogs')
+    .select()
+    .textSearch('description', `${searchedText.split(' ').join('|')}`); // if I don't have any blogs with keywords in title
+
+  if (searchedBlogsByTitle?.length) return searchedBlogsByTitle;
+
+  return searchedBlogsByDescription ?? [];
+};
+
 export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   useQuery({
     queryKey: [BLOGS_QUERY],
@@ -123,3 +140,15 @@ export const useDeleteUserBlogs = (): UseMutationResult<void, Error, { ids: numb
     },
   });
 };
+
+export const useGetSearchBlogsQuery = (
+  searchedText: string,
+  options?: Partial<UseQueryOptions<Blog[]>>
+): UseQueryResult<Blog[], Error> =>
+  useQuery({
+    queryKey: [SEARCH_BLOGS, searchedText],
+    queryFn: async () => {
+      return await getSearchedBlogs(searchedText);
+    },
+    ...options,
+  });

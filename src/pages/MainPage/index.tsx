@@ -4,17 +4,26 @@ import { UserInfo } from './components/UserInfo';
 import { UserOperations } from './components/UserOperations';
 import { JSX, useState } from 'react';
 import { CreateBlogWindow } from './components/CreateBlogWindow';
-import { useBlogsQuery } from 'src/api/blogs';
+import { useBlogsQuery, useGetSearchBlogsQuery } from 'src/api/blogs';
 import { DeleteBlogWindow } from './components/DeleteBlogWindow';
 import { useGetCurrentUserQuery } from 'src/api/user';
+import { useSearchParams } from 'react-router-dom';
 
 export const MainPage = (): JSX.Element => {
   const [shouldShowCreateWindow, setShouldShowCreateWindow] = useState(false);
   const [shouldShowDeleteWindow, setShouldShowDeleteWindow] = useState(false);
 
+  const [searchParams] = useSearchParams();
+
+  const searchedText = searchParams.get('query') ?? '';
+
   const { data: blogs, isLoading: isLoadingBlogs } = useBlogsQuery();
 
   const { data: user, isLoading: isLoadingUser } = useGetCurrentUserQuery();
+
+  const { data: searchedBlogs, isLoading: isLoadingSearchedBlogs } = useGetSearchBlogsQuery(searchedText, {
+    enabled: !!searchedText,
+  });
 
   return (
     <div className='d-flex flex-column main-page'>
@@ -27,7 +36,14 @@ export const MainPage = (): JSX.Element => {
             showDeleteWindow={() => setShouldShowDeleteWindow(true)}
           />
         </div>
-        {isLoadingBlogs || (blogs && <BlogsList actionType={null} isLoading={isLoadingBlogs} blogs={blogs} />)}
+        {isLoadingSearchedBlogs ||
+          (!!searchedBlogs?.length && (
+            <BlogsList actionType={null} isLoading={isLoadingSearchedBlogs} blogs={searchedBlogs} />
+          ))}
+
+        {!searchedBlogs?.length &&
+          !isLoadingSearchedBlogs &&
+          (isLoadingBlogs || (blogs && <BlogsList actionType={null} isLoading={isLoadingBlogs} blogs={blogs} />))}
       </div>
 
       {shouldShowCreateWindow && <CreateBlogWindow onClose={() => setShouldShowCreateWindow(false)} />}
