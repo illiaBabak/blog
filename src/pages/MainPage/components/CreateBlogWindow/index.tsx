@@ -1,20 +1,19 @@
-import { JSX, useContext, useState } from 'react';
-import { MainPageContext } from '../..';
+import { JSX, useState } from 'react';
 import { FormField } from 'src/components/FormField';
 import { useCreateBlog } from 'src/api/blogs';
 import { generateKey } from 'src/utils/generateKey';
 import { WindowWrapper } from 'src/components/WindowWrapper';
 
-export const CreateBlogWindow = (): JSX.Element => {
-  const { setShouldShowCreateWindow } = useContext(MainPageContext);
+type Props = {
+  onClose: () => void;
+};
 
+export const CreateBlogWindow = ({ onClose }: Props): JSX.Element => {
   const [blogImg, setBlogImg] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
   const { mutateAsync: createBlog } = useCreateBlog();
-
-  const hideWindow = () => setShouldShowCreateWindow(false);
 
   const createBlogHandle = () => {
     const imgData = blogImg
@@ -25,13 +24,13 @@ export const CreateBlogWindow = (): JSX.Element => {
       : null;
 
     createBlog({ title, description, imgData });
-    hideWindow();
+    onClose();
   };
 
   const shouldCreate = !!title.length && !!description.length;
 
   return (
-    <WindowWrapper onClose={hideWindow}>
+    <WindowWrapper onClose={onClose}>
       <div
         className='create-blog-window text-center d-flex flex-column align-items-center rounded position-relative'
         onClick={(e) => e.stopPropagation()}
@@ -39,7 +38,7 @@ export const CreateBlogWindow = (): JSX.Element => {
         <h4 className='m-0 mt-3'>Create your own blog!</h4>
         <div
           className='hide-btn position-absolute m-0 me-1 mt-1 d-flex justify-content-center align-items-center'
-          onClick={hideWindow}
+          onClick={onClose}
         >
           x
         </div>

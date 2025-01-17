@@ -8,6 +8,8 @@ export const CREATE_NEW_BLOG = 'create_new_blog';
 
 export const GET_USER_BLOGS_QUERY = 'get_user_blogs_query';
 
+export const DELETE_BLOG = 'delete_blog';
+
 export const USER_MUTATION = 'user_mutation';
 
 export const USER_LOGIN = 'user_login';

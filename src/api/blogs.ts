@@ -6,7 +6,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { BLOGS_QUERY, CREATE_NEW_BLOG, GET_USER_BLOGS_QUERY, BLOG_IMAGE_QUERY, BLOG_MUTATION } from './constants';
+import {
+  BLOGS_QUERY,
+  CREATE_NEW_BLOG,
+  GET_USER_BLOGS_QUERY,
+  BLOG_IMAGE_QUERY,
+  BLOG_MUTATION,
+  DELETE_BLOG,
+} from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
 
@@ -60,6 +67,12 @@ const getUserBlogs = async (userId: string): Promise<Blog[]> => {
   return data ?? [];
 };
 
+const deleteBlogs = async (ids: number[]): Promise<void> => {
+  const { error } = await supabase.from('blogs').delete().in('id', ids);
+
+  if (error) throw new Error(error.stack);
+};
+
 export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   useQuery({
     queryKey: [BLOGS_QUERY],
@@ -98,3 +111,15 @@ export const useGetUserBlogsQuery = (userId: string): UseQueryResult<Blog[], Err
     queryKey: [GET_USER_BLOGS_QUERY, userId],
     queryFn: async () => await getUserBlogs(userId),
   });
+
+export const useDeleteUserBlogs = (): UseMutationResult<void, Error, { ids: number[] }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [BLOG_MUTATION, DELETE_BLOG],
+    mutationFn: async ({ ids }) => await deleteBlogs(ids),
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: [BLOGS_QUERY] });
+    },
+  });
+};

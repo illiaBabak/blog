@@ -171,7 +171,7 @@ export const ProfilePage = (): JSX.Element => {
           </div>
         )}
         {(isLoadingUserBlogs || !!userBlogs?.length) && (
-          <BlogsList blogs={userBlogs as Blog[]} isLoading={isLoadingUserBlogs} />
+          <BlogsList actionType={null} blogs={userBlogs as Blog[]} isLoading={isLoadingUserBlogs} />
         )}
       </div>
     </div>

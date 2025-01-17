@@ -3,6 +3,20 @@
   height: 420px;
   background-color: var(--primary-color);
 
+  &.delete-blog {
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+
+  &.selected {
+    filter: grayscale(40%);
+    opacity: 0.6;
+  }
+
   .skeleton-loader {
     width: 100%;
     height: 240px;

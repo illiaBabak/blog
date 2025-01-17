@@ -1,16 +1,20 @@
+import { User } from '@supabase/supabase-js';
 import { JSX, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetCurrentUserImageQuery, useGetCurrentUserQuery, useSignOut, useUpdateUserPublicInfo } from 'src/api/user';
+import { useGetCurrentUserImageQuery, useSignOut, useUpdateUserPublicInfo } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { pageConfig } from 'src/config/pages';
 import { isString } from 'src/utils/guards';
 
-export const UserInfo = (): JSX.Element => {
+type Props = {
+  user: User | null | undefined;
+  isLoadingUser: boolean;
+};
+
+export const UserInfo = ({ user, isLoadingUser }: Props): JSX.Element => {
   const navigate = useNavigate();
 
   const [isDataUpdated, setIsDataUpdated] = useState(false);
-
-  const { data: user, isLoading: isLoadingUser } = useGetCurrentUserQuery();
 
   const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(user?.id ?? '', {
     enabled: !!user?.id,

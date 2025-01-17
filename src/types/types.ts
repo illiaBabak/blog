@@ -13,3 +13,14 @@ export type PublicUser = {
   username: string | null;
   image_url: string | null;
 };
+
+export type BlogAction =
+  | {
+      type: 'delete';
+      blogsToDelete: number[];
+      setBlogsToDelete: React.Dispatch<React.SetStateAction<number[]>>;
+    }
+  | {
+      type: 'edit';
+    }
+  | null;

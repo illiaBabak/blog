@@ -4,14 +4,15 @@ import { useBlogImageQuery } from 'src/api/blogs';
 import { useGetCurrentUserImageQuery, useGetUserByIdQuery } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { pageConfig } from 'src/config/pages';
-import { Blog } from 'src/types/types';
+import { Blog, BlogAction } from 'src/types/types';
 import { formatDate } from 'src/utils/formatDate';
 
 type Props = {
   blog: Blog;
+  actionType: BlogAction;
 };
 
-export const BlogCard = ({ blog }: Props): JSX.Element => {
+export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
   const navigate = useNavigate();
 
   const { data: url, isLoading: isLoadingImg } = useBlogImageQuery(blog.image_url as string, {
@@ -22,8 +23,22 @@ export const BlogCard = ({ blog }: Props): JSX.Element => {
 
   const { data: userImg } = useGetCurrentUserImageQuery(user?.user_id as string, { enabled: !!user?.user_id });
 
+  const handleClickBlog = () => {
+    if (!actionType) return;
+
+    if (actionType.type === 'delete') {
+      const isBlogToDelete = actionType.blogsToDelete.includes(blog.id);
+
+      if (isBlogToDelete) actionType.setBlogsToDelete((prev) => prev.filter((prevId) => prevId !== blog.id));
+      else actionType.setBlogsToDelete((prev) => [blog.id, ...prev]);
+    }
+  };
+
   return (
-    <div className='blog rounded mt-0 mb-4 mx-3'>
+    <div
+      onClick={handleClickBlog}
+      className={`blog ${actionType?.type === 'delete' ? 'delete-blog' : ''} ${actionType?.type === 'delete' && actionType.blogsToDelete.includes(blog.id) ? 'selected' : ''} rounded mt-0 mb-4 mx-3`}
+    >
       {isLoadingImg ? (
         <SkeletonLoader />
       ) : (

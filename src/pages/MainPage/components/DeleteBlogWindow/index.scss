@@ -1,0 +1,34 @@
+.delete-blog-window {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--main);
+  width: 85%;
+  height: 85%;
+  cursor: default;
+
+  .close-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 28px;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+
+  .delete-btn {
+    width: 120px;
+    height: 40px;
+    background-color: var(--accent);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+}
