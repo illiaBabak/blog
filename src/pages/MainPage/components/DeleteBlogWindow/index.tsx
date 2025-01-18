@@ -30,7 +30,7 @@ export const DeleteBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
     <WindowWrapper onClose={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className='delete-blog-window d-flex justify-content-center align-items-center rounded position-relative'
+        className='delete-blog-window d-flex flex-column justify-content-center align-items-center rounded position-relative'
       >
         <h2 className='mt-3'>Choose blogs to delete</h2>
         <div onClick={onClose} className='position-absolute d-flex justify-content close-btn'>

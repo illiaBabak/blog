@@ -22,5 +22,7 @@ export type BlogAction =
     }
   | {
       type: 'edit';
+      blogToEdit: Blog | null;
+      setBlogToEdit: React.Dispatch<React.SetStateAction<Blog | null>>;
     }
   | null;

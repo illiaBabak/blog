@@ -1,7 +1,6 @@
 import { JSX, useState } from 'react';
 import { FormField } from 'src/components/FormField';
 import { useCreateBlog } from 'src/api/blogs';
-import { generateKey } from 'src/utils/generateKey';
 import { WindowWrapper } from 'src/components/WindowWrapper';
 
 type Props = {
@@ -16,14 +15,7 @@ export const CreateBlogWindow = ({ onClose }: Props): JSX.Element => {
   const { mutateAsync: createBlog } = useCreateBlog();
 
   const createBlogHandle = () => {
-    const imgData = blogImg
-      ? {
-          image: blogImg,
-          imageKey: generateKey(16),
-        }
-      : null;
-
-    createBlog({ title, description, imgData });
+    createBlog({ title, description, img: blogImg });
     onClose();
   };
 

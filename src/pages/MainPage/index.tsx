@@ -8,10 +8,12 @@ import { useBlogsQuery, useGetSearchBlogsQuery } from 'src/api/blogs';
 import { DeleteBlogWindow } from './components/DeleteBlogWindow';
 import { useGetCurrentUserQuery } from 'src/api/user';
 import { useSearchParams } from 'react-router-dom';
+import { EditBlogWindow } from './components/EditBlogWindow';
 
 export const MainPage = (): JSX.Element => {
   const [shouldShowCreateWindow, setShouldShowCreateWindow] = useState(false);
   const [shouldShowDeleteWindow, setShouldShowDeleteWindow] = useState(false);
+  const [shouldShowEditWindow, setShouldShowEditWindow] = useState(false);
 
   const [searchParams] = useSearchParams();
 
@@ -34,6 +36,7 @@ export const MainPage = (): JSX.Element => {
           <UserOperations
             showCreateWindow={() => setShouldShowCreateWindow(true)}
             showDeleteWindow={() => setShouldShowDeleteWindow(true)}
+            showEditWindow={() => setShouldShowEditWindow(true)}
           />
         </div>
         {isLoadingSearchedBlogs ||
@@ -49,6 +52,9 @@ export const MainPage = (): JSX.Element => {
       {shouldShowCreateWindow && <CreateBlogWindow onClose={() => setShouldShowCreateWindow(false)} />}
       {shouldShowDeleteWindow && (
         <DeleteBlogWindow onClose={() => setShouldShowDeleteWindow(false)} userId={user?.id ?? ''} />
+      )}
+      {shouldShowEditWindow && (
+        <EditBlogWindow onClose={() => setShouldShowEditWindow(false)} userId={user?.id ?? ''} />
       )}
     </div>
   );

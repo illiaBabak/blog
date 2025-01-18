@@ -14,9 +14,11 @@ import {
   BLOG_MUTATION,
   DELETE_BLOG,
   SEARCH_BLOGS,
+  EDIT_BLOG,
 } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
+import { SUPABASE_URL } from 'src/utils/constants';
 
 const getBlogs = async (): Promise<Blog[]> => {
   const { data, error } = await supabase.from('blogs').select().order('created_at', { ascending: false });
@@ -26,34 +28,41 @@ const getBlogs = async (): Promise<Blog[]> => {
   return data;
 };
 
-const getBlogImage = (url: string): string => {
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('images').getPublicUrl(`blogs/${url}`);
+const getBlogImage = async (blogId: number): Promise<string | null> => {
+  const { data, error } = await supabase.from('blogs').select().eq('id', blogId);
 
-  return publicUrl;
+  if (error) throw new Error('Something went wrong with getting blog image');
+
+  return data[0].image_url ?? null;
 };
 
-const createBlog = async (
-  title: string,
-  description: string,
-  imgData: { image: File; imageKey: string } | null
-): Promise<void> => {
-  const { error: createBlogError } = await supabase
+const createBlog = async (title: string, description: string, img: File | null): Promise<void> => {
+  const { data: createdBlog, error: createBlogError } = await supabase
     .from('blogs')
-    .insert({ title, description, image_url: imgData ? imgData.imageKey : null })
+    .insert({
+      title,
+      description,
+      image_url: null,
+    })
     .select();
 
   if (createBlogError) throw new Error(createBlogError.stack);
 
-  if (!imgData) return;
+  if (!img) return;
 
-  const { error: uploadImageError } = await supabase.storage
-    .from('images')
-    .upload(`blogs/${imgData.imageKey}`, imgData.image, {
-      cacheControl: '3600',
-      upsert: true,
-    });
+  const { error: updateImageUrlError } = await supabase
+    .from('blogs')
+    .update({ image_url: `${SUPABASE_URL}/storage/v1/object/public/images/blogs/${createdBlog[0].id}?t=${Date.now()}` })
+    .eq('id', createdBlog[0].id); // Match the blog by its `id`
+
+  if (updateImageUrlError) {
+    throw new Error(`Failed to update image_url: ${updateImageUrlError.message}`);
+  }
+
+  const { error: uploadImageError } = await supabase.storage.from('images').upload(`blogs/${createdBlog[0].id}`, img, {
+    cacheControl: '0',
+    upsert: true,
+  });
 
   if (uploadImageError) throw new Error(uploadImageError.stack);
 };
@@ -70,6 +79,8 @@ const getUserBlogs = async (userId: string): Promise<Blog[]> => {
 
 const deleteBlogs = async (ids: number[]): Promise<void> => {
   const { error } = await supabase.from('blogs').delete().in('id', ids);
+
+  ids.forEach((id) => supabase.storage.from('images').remove([`blogs/${id}`]));
 
   if (error) throw new Error(error.stack);
 };
@@ -90,6 +101,22 @@ const getSearchedBlogs = async (searchedText: string): Promise<Blog[]> => {
   return searchedBlogsByDescription ?? [];
 };
 
+const editBlog = async (blog: Blog, newImg: File | null): Promise<void> => {
+  const { error: errorInfo } = await supabase.from('blogs').update(blog).eq('id', blog.id);
+
+  if (errorInfo) throw new Error('Something went wrong with edited blog info');
+
+  if (!newImg) return;
+
+  await supabase.storage.from('images').remove([`blogs/${blog.id}`]);
+
+  const { error: errorToUploadImg } = await supabase.storage
+    .from('images')
+    .upload(`blogs/${blog.id}?t=${Date.now()}`, newImg, { cacheControl: '0', upsert: true });
+
+  if (errorToUploadImg) throw new Error('Something went wrong with edited blog img');
+};
+
 export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   useQuery({
     queryKey: [BLOGS_QUERY],
@@ -97,28 +124,29 @@ export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   });
 
 export const useBlogImageQuery = (
-  url: string,
-  options?: Partial<UseQueryOptions<string>>
-): UseQueryResult<string, Error> =>
+  blogId: number,
+  options?: Partial<UseQueryOptions<string | null>>
+): UseQueryResult<string | null, Error> =>
   useQuery({
-    queryKey: [BLOG_IMAGE_QUERY, url],
-    queryFn: () => getBlogImage(url),
+    queryKey: [BLOG_IMAGE_QUERY, blogId],
+    queryFn: async () => {
+      return await getBlogImage(blogId);
+    },
     ...options,
   });
 
 export const useCreateBlog = (): UseMutationResult<
   void,
   Error,
-  { title: string; description: string; imgData: { image: File; imageKey: string } | null }
+  { title: string; description: string; img: File | null }
 > => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: [BLOG_MUTATION, CREATE_NEW_BLOG],
-    mutationFn: async ({ title, description, imgData }) => await createBlog(title, description, imgData),
-    onSettled: (_, __, { imgData }) => {
+    mutationFn: async ({ title, description, img }) => await createBlog(title, description, img),
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [BLOGS_QUERY] });
-      queryClient.invalidateQueries({ queryKey: [BLOG_IMAGE_QUERY, imgData?.imageKey] });
     },
   });
 };
@@ -152,3 +180,18 @@ export const useGetSearchBlogsQuery = (
     },
     ...options,
   });
+
+export const useEditBlog = (): UseMutationResult<void, Error, { blog: Blog; newImg: File | null }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [BLOG_MUTATION, EDIT_BLOG],
+    mutationFn: async ({ blog, newImg }) => {
+      return await editBlog(blog, newImg);
+    },
+    onSettled: (_, __, { blog }) => {
+      queryClient.invalidateQueries({ queryKey: [BLOG_IMAGE_QUERY, blog.id], refetchType: 'all' });
+      queryClient.invalidateQueries({ queryKey: [BLOGS_QUERY] });
+    },
+  });
+};

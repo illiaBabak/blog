@@ -15,8 +15,8 @@ type Props = {
 export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
   const navigate = useNavigate();
 
-  const { data: url, isLoading: isLoadingImg } = useBlogImageQuery(blog.image_url as string, {
-    enabled: !!blog.image_url,
+  const { data: url, isLoading: isLoadingImg } = useBlogImageQuery(blog.id, {
+    enabled: !!blog.id,
   });
 
   const { data: user } = useGetUserByIdQuery(blog.user_id as string, { enabled: !!blog.user_id });
@@ -31,13 +31,15 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
 
       if (isBlogToDelete) actionType.setBlogsToDelete((prev) => prev.filter((prevId) => prevId !== blog.id));
       else actionType.setBlogsToDelete((prev) => [blog.id, ...prev]);
+    } else if (actionType.type === 'edit') {
+      actionType.setBlogToEdit(blog);
     }
   };
 
   return (
     <div
       onClick={handleClickBlog}
-      className={`blog ${actionType?.type === 'delete' ? 'delete-blog' : ''} ${actionType?.type === 'delete' && actionType.blogsToDelete.includes(blog.id) ? 'selected' : ''} rounded mt-0 mb-4 mx-3`}
+      className={`blog ${actionType?.type === 'edit' || actionType?.type === 'delete' ? `${actionType.type}-blog` : ''} ${actionType?.type === 'delete' && actionType.blogsToDelete.includes(blog.id) ? 'selected' : ''} rounded mt-0 mb-4 mx-3`}
     >
       {isLoadingImg ? (
         <SkeletonLoader />
@@ -58,6 +60,10 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
               className='object-fit-cover rounded-circle user-icon'
               src={userImg ?? '/empty-pfp.png'}
               alt='user-img'
+              onError={(e) => {
+                e.currentTarget.src = '/empty-pfp.png';
+                e.currentTarget.onerror = null;
+              }}
             />
             <p className='mb-0 ms-2 d-flex align-items-center'>{user?.username}</p>
           </div>

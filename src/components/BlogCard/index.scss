@@ -3,7 +3,8 @@
   height: 420px;
   background-color: var(--primary-color);
 
-  &.delete-blog {
+  &.delete-blog,
+  &.edit-blog {
     cursor: pointer;
 
     &:hover {

@@ -10,6 +10,8 @@ export const GET_USER_BLOGS_QUERY = 'get_user_blogs_query';
 
 export const DELETE_BLOG = 'delete_blog';
 
+export const EDIT_BLOG = 'edit_blog';
+
 export const SEARCH_BLOGS = 'search_blogs';
 
 export const USER_MUTATION = 'user_mutation';
