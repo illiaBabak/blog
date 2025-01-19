@@ -1,4 +1,4 @@
-import { Blog, PublicUser } from './types';
+import { Blog, CommentType, PublicUser } from './types';
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -51,13 +51,7 @@ export type Database = {
         Relationships: [];
       };
       comments: {
-        Row: {
-          blog_id: number | null;
-          created_at: string;
-          id: number;
-          text: string | null;
-          user_id: string | null;
-        };
+        Row: CommentType;
         Insert: {
           blog_id?: number | null;
           created_at?: string;

@@ -15,6 +15,7 @@ import {
   DELETE_BLOG,
   SEARCH_BLOGS,
   EDIT_BLOG,
+  GET_BLOG_BY_ID,
 } from './constants';
 import { Blog } from 'src/types/types';
 import { supabase } from 'src';
@@ -117,6 +118,14 @@ const editBlog = async (blog: Blog, newImg: File | null): Promise<void> => {
   if (errorToUploadImg) throw new Error('Something went wrong with edited blog img');
 };
 
+const getBlogById = async (blogId: number): Promise<Blog | null> => {
+  const { data, error } = await supabase.from('blogs').select().eq('id', blogId);
+
+  if (error) throw new Error('Something went wrong with getting blog by id');
+
+  return data[0] ?? null;
+};
+
 export const useBlogsQuery = (): UseQueryResult<Blog[], Error> =>
   useQuery({
     queryKey: [BLOGS_QUERY],
@@ -195,3 +204,11 @@ export const useEditBlog = (): UseMutationResult<void, Error, { blog: Blog; newI
     },
   });
 };
+
+export const useGetBlogByIdQuery = (blogId: number): UseQueryResult<Blog | null, Error> =>
+  useQuery({
+    queryKey: [GET_BLOG_BY_ID],
+    queryFn: async () => {
+      return await getBlogById(blogId);
+    },
+  });

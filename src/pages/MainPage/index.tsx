@@ -41,12 +41,13 @@ export const MainPage = (): JSX.Element => {
         </div>
         {isLoadingSearchedBlogs ||
           (!!searchedBlogs?.length && (
-            <BlogsList actionType={null} isLoading={isLoadingSearchedBlogs} blogs={searchedBlogs} />
+            <BlogsList actionType={{ type: 'comments' }} isLoading={isLoadingSearchedBlogs} blogs={searchedBlogs} />
           ))}
 
         {!searchedBlogs?.length &&
           !isLoadingSearchedBlogs &&
-          (isLoadingBlogs || (blogs && <BlogsList actionType={null} isLoading={isLoadingBlogs} blogs={blogs} />))}
+          (isLoadingBlogs ||
+            (blogs && <BlogsList actionType={{ type: 'comments' }} isLoading={isLoadingBlogs} blogs={blogs} />))}
       </div>
 
       {shouldShowCreateWindow && <CreateBlogWindow onClose={() => setShouldShowCreateWindow(false)} />}

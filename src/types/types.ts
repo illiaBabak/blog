@@ -25,4 +25,14 @@ export type BlogAction =
       blogToEdit: Blog | null;
       setBlogToEdit: React.Dispatch<React.SetStateAction<Blog | null>>;
     }
-  | null;
+  | {
+      type: 'comments';
+    };
+
+export type CommentType = {
+  blog_id: number;
+  created_at: string;
+  id: number;
+  text: string;
+  user_id: string;
+};

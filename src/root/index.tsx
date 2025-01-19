@@ -1,6 +1,7 @@
 import { createContext, JSX, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
+import { CommentsPage } from 'src/pages/CommentsPage';
 import { ConfirmPage } from 'src/pages/ConfirmPage';
 import { LoginPage } from 'src/pages/LoginPage';
 import { MainPage } from 'src/pages/MainPage';
@@ -39,7 +40,7 @@ export const App = (): JSX.Element => {
     localStorage.setItem('is_light_theme', JSON.stringify(isLightTheme ? 'light' : 'dark'));
   }, [isLightTheme]);
 
-  const { start, login, redirect, main, confirm, profile } = pageConfig;
+  const { start, login, redirect, main, confirm, profile, comments } = pageConfig;
 
   return (
     <div className='main-container m-0 p-0'>
@@ -54,6 +55,7 @@ export const App = (): JSX.Element => {
             <Route path={main} element={<MainPage />} />
             <Route path={confirm} element={<ConfirmPage />} />
             <Route path={profile} element={<ProfilePage />} />
+            <Route path={comments} element={<CommentsPage />} />
           </Routes>
         </BrowserRouter>
       </GlobalContext.Provider>

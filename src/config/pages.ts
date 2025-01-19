@@ -5,6 +5,7 @@ class PageConfig {
   main = '/main';
   confirm = '/confirm';
   profile = '/profile';
+  comments = '/comments';
 }
 
 export const pageConfig = new PageConfig();

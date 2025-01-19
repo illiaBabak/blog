@@ -1,0 +1,30 @@
+.comment {
+  height: auto;
+  background-color: var(--primary-color);
+
+  .user-data {
+    cursor: pointer;
+
+    .user-icon,
+    .skeleton-loader {
+      width: 40px;
+      height: 40px;
+    }
+
+    .skeleton-loader {
+      border-radius: 50%;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
+
+  .info {
+    .date {
+      font-size: 12px;
+      color: gray;
+    }
+  }
+}

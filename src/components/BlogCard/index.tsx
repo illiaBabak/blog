@@ -33,13 +33,13 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
       else actionType.setBlogsToDelete((prev) => [blog.id, ...prev]);
     } else if (actionType.type === 'edit') {
       actionType.setBlogToEdit(blog);
-    }
+    } else navigate(`${pageConfig.comments}?blog-id=${blog.id}`);
   };
 
   return (
     <div
       onClick={handleClickBlog}
-      className={`blog ${actionType?.type === 'edit' || actionType?.type === 'delete' ? `${actionType.type}-blog` : ''} ${actionType?.type === 'delete' && actionType.blogsToDelete.includes(blog.id) ? 'selected' : ''} rounded mt-0 mb-4 mx-3`}
+      className={`blog ${actionType?.type === 'delete' && actionType.blogsToDelete.includes(blog.id) ? 'selected' : ''} rounded mt-0 mb-4 mx-3`}
     >
       {isLoadingImg ? (
         <SkeletonLoader />
@@ -53,7 +53,7 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
         <p className='description m-0 scroll-container-y'>{blog.description}</p>
         {user && (
           <div
-            className='d-flex flex-row user-info'
+            className='d-flex flex-row user-info mt-2'
             onClick={() => navigate(`${pageConfig.profile}?userId=${user.user_id}`)}
           >
             <img

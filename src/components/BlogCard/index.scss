@@ -1,16 +1,12 @@
 .blog {
   width: 360px;
-  height: 420px;
+  height: 430px;
   background-color: var(--primary-color);
+  cursor: pointer;
 
-  &.delete-blog,
-  &.edit-blog {
-    cursor: pointer;
-
-    &:hover {
-      transform: scale(1.05);
-      transition: 0.33s;
-    }
+  &:hover {
+    transform: scale(1.05);
+    transition: 0.33s;
   }
 
   &.selected {
