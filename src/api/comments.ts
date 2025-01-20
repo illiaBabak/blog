@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { supabase } from 'src';
 import { CommentType } from 'src/types/types';
-import { COMMENT_MUTATION, CREATE_COMMENT, DELETE_COMMENT, GET_COMMENTS } from './constants';
+import { COMMENT_MUTATION, CREATE_COMMENT, DELETE_COMMENT, EDIT_COMMENT, GET_COMMENTS } from './constants';
 
 const getComments = async (blogId: number): Promise<CommentType[]> => {
   const { data, error } = await supabase
@@ -25,6 +25,12 @@ const deleteComment = async (commentId: number): Promise<void> => {
   const { error } = await supabase.from('comments').delete().eq('id', commentId);
 
   if (error) throw new Error('Something went wrong with deleting comment!');
+};
+
+const editComment = async (newComment: string, commentId: number): Promise<void> => {
+  const { error } = await supabase.from('comments').update({ text: newComment }).eq('id', commentId);
+
+  if (error) throw new Error('Something went wrong with editing comment!');
 };
 
 export const useGetCommentsQuery = (blogId: number): UseQueryResult<CommentType[], Error> =>
@@ -60,6 +66,24 @@ export const useDeleteComment = (): UseMutationResult<void, Error, { commentId: 
     mutationKey: [COMMENT_MUTATION, DELETE_COMMENT],
     mutationFn: async ({ commentId }) => {
       return await deleteComment(commentId);
+    },
+    onSettled: async (_, __, { blogId }) => {
+      await queryClient.invalidateQueries({ queryKey: [GET_COMMENTS, blogId] });
+    },
+  });
+};
+
+export const useEditComment = (): UseMutationResult<
+  void,
+  Error,
+  { commentId: number; blogId: number; newComment: string }
+> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [COMMENT_MUTATION, EDIT_COMMENT],
+    mutationFn: async ({ newComment, commentId }) => {
+      return await editComment(newComment, commentId);
     },
     onSettled: async (_, __, { blogId }) => {
       await queryClient.invalidateQueries({ queryKey: [GET_COMMENTS, blogId] });
