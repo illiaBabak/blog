@@ -47,3 +47,5 @@ export const COMMENT_MUTATION = 'comment_mutation';
 export const CREATE_COMMENT = 'create_comment';
 
 export const GET_COMMENTS = 'get_comments';
+
+export const DELETE_COMMENT = 'delete_comment';

@@ -27,4 +27,18 @@
       color: gray;
     }
   }
+
+  .delete-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: 0.33s;
+    }
+  }
 }

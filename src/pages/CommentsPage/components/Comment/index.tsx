@@ -1,6 +1,7 @@
 import { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserByIdQuery } from 'src/api/user';
+import { useDeleteComment } from 'src/api/comments';
+import { useGetCurrentUserQuery, useGetUserByIdQuery } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { pageConfig } from 'src/config/pages';
 import { CommentType } from 'src/types/types';
@@ -8,17 +9,22 @@ import { formatDate } from 'src/utils/formatDate';
 
 type Props = {
   comment: CommentType;
+  blogId: number;
 };
 
-export const Comment = ({ comment }: Props): JSX.Element => {
+export const Comment = ({ comment, blogId }: Props): JSX.Element => {
   const navigate = useNavigate();
+
+  const { data: currentUser } = useGetCurrentUserQuery();
 
   const { data: user, isLoading: isLoadingUserImg } = useGetUserByIdQuery(comment.user_id, {
     enabled: !!comment.user_id,
   });
 
+  const { mutateAsync: deleteComment } = useDeleteComment();
+
   return (
-    <div className='d-flex flex-row align-items-center comment rounded p-4 m-2 mx-3'>
+    <div className='d-flex flex-row align-items-center comment rounded p-4 m-2 mx-3 position-relative'>
       <div
         onClick={() => navigate(`${pageConfig.profile}?userId=${user?.user_id}`)}
         className='d-flex flex-row align-items-center user-data'
@@ -28,8 +34,12 @@ export const Comment = ({ comment }: Props): JSX.Element => {
         ) : (
           <img
             className='object-fit-cover rounded-circle user-icon'
-            src={user?.image_url ?? '/empty-pfp.png'}
+            src={user?.image_url ?? 'empty-pfp.png'}
             alt='user-icon'
+            onError={({ currentTarget }) => {
+              currentTarget.src = '/empty-pfp.png';
+              currentTarget.onerror = null; //stop looping
+            }}
           />
         )}
         <p className='mb-0 ms-2'>{user?.username}</p>
@@ -39,6 +49,15 @@ export const Comment = ({ comment }: Props): JSX.Element => {
         <p className='mb-0'>{comment.text}</p>
         <p className='mb-0 mt-2 date'>{formatDate(comment.created_at)}</p>
       </div>
+
+      {currentUser?.id === user?.user_id && (
+        <div
+          className='position-absolute delete-btn d-flex justify-content-center align-items-center'
+          onClick={() => deleteComment({ commentId: comment.id, blogId })}
+        >
+          x
+        </div>
+      )}
     </div>
   );
 };

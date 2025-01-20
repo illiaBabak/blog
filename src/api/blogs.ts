@@ -79,11 +79,14 @@ const getUserBlogs = async (userId: string): Promise<Blog[]> => {
 };
 
 const deleteBlogs = async (ids: number[]): Promise<void> => {
-  const { error } = await supabase.from('blogs').delete().in('id', ids);
+  const { error: errorBlogs } = await supabase.from('blogs').delete().in('id', ids);
+
+  const { error: errorComments } = await supabase.from('comments').delete().in('blog_id', ids);
 
   ids.forEach((id) => supabase.storage.from('images').remove([`blogs/${id}`]));
 
-  if (error) throw new Error(error.stack);
+  if (errorBlogs) throw new Error(errorBlogs.stack);
+  else if (errorComments) throw new Error(errorComments.stack);
 };
 
 const getSearchedBlogs = async (searchedText: string): Promise<Blog[]> => {

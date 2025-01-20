@@ -86,8 +86,12 @@ export const CommentsPage = (): JSX.Element => {
               ) : (
                 <img
                   className='object-fit-cover rounded-circle user-icon'
-                  src={userImg ?? '/empty-pfp.png'}
+                  src={userImg}
                   alt='user-img'
+                  onError={({ currentTarget }) => {
+                    currentTarget.src = '/empty-pfp.png';
+                    currentTarget.onerror = null; //stop looping
+                  }}
                 />
               )}
 
@@ -134,7 +138,9 @@ export const CommentsPage = (): JSX.Element => {
           {isLoadingComments ? (
             <Loader />
           ) : (
-            comments?.map((comment, index) => <Comment comment={comment} key={`comment-${index}-${comment.id}`} />)
+            comments?.map((comment, index) => (
+              <Comment blogId={blogId} comment={comment} key={`comment-${index}-${comment.id}`} />
+            ))
           )}
         </div>
       </div>

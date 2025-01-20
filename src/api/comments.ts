@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { supabase } from 'src';
 import { CommentType } from 'src/types/types';
-import { COMMENT_MUTATION, CREATE_COMMENT, GET_COMMENTS } from './constants';
+import { COMMENT_MUTATION, CREATE_COMMENT, DELETE_COMMENT, GET_COMMENTS } from './constants';
 
 const getComments = async (blogId: number): Promise<CommentType[]> => {
   const { data, error } = await supabase
@@ -19,6 +19,12 @@ const createComment = async (comment: string, blogId: number, userId: string): P
   const { error } = await supabase.from('comments').insert({ text: comment, blog_id: blogId, user_id: userId });
 
   if (error) throw new Error('Something went wrong with creating comment!');
+};
+
+const deleteComment = async (commentId: number): Promise<void> => {
+  const { error } = await supabase.from('comments').delete().eq('id', commentId);
+
+  if (error) throw new Error('Something went wrong with deleting comment!');
 };
 
 export const useGetCommentsQuery = (blogId: number): UseQueryResult<CommentType[], Error> =>
@@ -40,6 +46,20 @@ export const useAddComment = (): UseMutationResult<
     mutationKey: [COMMENT_MUTATION, CREATE_COMMENT],
     mutationFn: async ({ comment, blogId, userId }) => {
       return await createComment(comment, blogId, userId);
+    },
+    onSettled: async (_, __, { blogId }) => {
+      await queryClient.invalidateQueries({ queryKey: [GET_COMMENTS, blogId] });
+    },
+  });
+};
+
+export const useDeleteComment = (): UseMutationResult<void, Error, { commentId: number; blogId: number }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [COMMENT_MUTATION, DELETE_COMMENT],
+    mutationFn: async ({ commentId }) => {
+      return await deleteComment(commentId);
     },
     onSettled: async (_, __, { blogId }) => {
       await queryClient.invalidateQueries({ queryKey: [GET_COMMENTS, blogId] });
