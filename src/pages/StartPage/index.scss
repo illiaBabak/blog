@@ -25,3 +25,11 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .start-page {
+    .description {
+      width: 320px;
+    }
+  }
+}

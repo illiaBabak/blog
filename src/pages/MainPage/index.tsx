@@ -9,6 +9,7 @@ import { DeleteBlogWindow } from './components/DeleteBlogWindow';
 import { useGetCurrentUserQuery } from 'src/api/user';
 import { useSearchParams } from 'react-router-dom';
 import { EditBlogWindow } from './components/EditBlogWindow';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 export const MainPage = (): JSX.Element => {
   const [shouldShowCreateWindow, setShouldShowCreateWindow] = useState(false);
@@ -27,11 +28,13 @@ export const MainPage = (): JSX.Element => {
     enabled: !!searchedText,
   });
 
+  const { isMobile } = useGetDeviceType();
+
   return (
     <div className='d-flex flex-column main-page'>
       <Header />
-      <div className='d-flex flex-row px-4 content'>
-        <div className='d-flex flex-column mt-4'>
+      <div className={`d-flex ${isMobile ? 'flex-column' : 'flex-row'} px-4 content`}>
+        <div className='mt-4'>
           <UserInfo user={user} isLoadingUser={isLoadingUser} />
           <UserOperations
             showCreateWindow={() => setShouldShowCreateWindow(true)}

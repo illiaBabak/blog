@@ -42,3 +42,26 @@
     }
   }
 }
+
+@media only screen and (max-width: 480px) {
+  .edit-blog-window {
+    .close-btn {
+      width: 26px;
+      height: 26px;
+      font-size: 24px;
+    }
+
+    .img-wrapper {
+      .blog-img,
+      .file-input {
+        height: 170px;
+        cursor: pointer;
+      }
+    }
+
+    .edit-btn {
+      width: 220px;
+      height: 32px;
+    }
+  }
+}

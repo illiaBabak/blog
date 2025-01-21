@@ -14,3 +14,25 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .user-operations {
+    height: 70px;
+
+    .operation {
+      height: 35px;
+      font-size: 14px;
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .user-operations {
+    height: 60px;
+
+    .operation {
+      height: 30px;
+      font-size: 10px;
+    }
+  }
+}

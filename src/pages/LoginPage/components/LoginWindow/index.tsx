@@ -5,6 +5,7 @@ import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
 import { isValidEmail } from 'src/utils/isValidEmail';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 type Props = {
   setToSignUp: () => void;
@@ -35,9 +36,11 @@ export const LoginWindow = ({ setToSignUp }: Props): JSX.Element => {
     if (isSuccesedLogin) navigate(pageConfig.main);
   }, [isSuccesedLogin, navigate]);
 
+  const { isTablet } = useGetDeviceType();
+
   return (
     <div className='login-window p-3 d-flex flex-column justify-content-between mb-4'>
-      <div>
+      <div className={`${isTablet ? 'text-center' : ''}`}>
         <h1 className='mb-1'>Welcome back!</h1>
         <p className='sub-text pb-2'>Welcome back! Please enter your details</p>
         <FormField

@@ -57,3 +57,49 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .sign-up-window {
+    width: 360px;
+
+    .content {
+      .img-wrapper {
+        width: 85px;
+        height: 85px;
+
+        .file-input {
+          width: 85px;
+          height: 85px;
+        }
+
+        .icon {
+          width: 85px;
+          height: 85px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .sign-up-window {
+    width: 300px;
+
+    .content {
+      .img-wrapper {
+        width: 65px;
+        height: 65px;
+
+        .file-input {
+          width: 65px;
+          height: 65px;
+        }
+
+        .icon {
+          width: 65px;
+          height: 65px;
+        }
+      }
+    }
+  }
+}

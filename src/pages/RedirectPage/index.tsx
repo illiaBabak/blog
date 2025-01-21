@@ -9,7 +9,7 @@ export const RedirectPage = (): JSX.Element => {
   return (
     <div className='redirect-page d-flex flex-column w-100 h-100 p-2'>
       <ThemeBtn />
-      <div className='m-auto align-self-center d-flex flex-column justify-content-center align-items-center'>
+      <div className='m-auto align-self-center d-flex flex-column justify-content-center align-items-center text-center'>
         <h1>Oops, something went wrong :(</h1>
         <input
           className='btn text-white mt-3 p-2'

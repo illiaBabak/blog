@@ -2,6 +2,7 @@ import { JSX, useState } from 'react';
 import { useDeleteUserBlogs, useGetUserBlogsQuery } from 'src/api/blogs';
 import { BlogsList } from 'src/components/BlogsList';
 import { WindowWrapper } from 'src/components/WindowWrapper';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 import { Blog } from 'src/types/types';
 
 type Props = {
@@ -26,14 +27,17 @@ export const DeleteBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
     onClose();
   };
 
+  const { isMobile } = useGetDeviceType();
+
   return (
     <WindowWrapper onClose={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className='delete-blog-window d-flex flex-column justify-content-center align-items-center rounded position-relative'
+        className='delete-blog-window d-flex flex-column justify-content-center align-items-center rounded position-relative p-2'
       >
-        <h2 className='mt-3'>Choose blogs to delete</h2>
-        <div onClick={onClose} className='position-absolute d-flex justify-content close-btn'>
+        {isMobile ? <h6 className='mt-4'>Choose blogs to delete</h6> : <h2 className='mt-3'>Choose blogs to delete</h2>}
+
+        <div onClick={onClose} className='position-absolute d-flex justify-content-center align-items-center close-btn'>
           x
         </div>
         <div className='d-flex flex-row w-100 h-100 scroll-container-y'>
@@ -52,7 +56,7 @@ export const DeleteBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
         </div>
 
         <div
-          className='delete-btn text-white d-flex justify-content-center align-items-center rounded mb-3'
+          className={`delete-btn text-white d-flex justify-content-center align-items-center rounded ${isMobile ? 'mt-2' : 'mb-3'}`}
           onClick={handleDeleteBlogs}
         >
           Delete

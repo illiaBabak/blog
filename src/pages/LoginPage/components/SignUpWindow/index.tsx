@@ -5,6 +5,7 @@ import { LoginContext } from '../..';
 import { useNavigate } from 'react-router-dom';
 import { pageConfig } from 'src/config/pages';
 import { isValidEmail } from 'src/utils/isValidEmail';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 type AuthMessage = {
   type: 'VERIFIED';
@@ -18,6 +19,8 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   const { loginMessage, setLoginMessage } = useContext(LoginContext);
 
   const navigate = useNavigate();
+
+  const { isMobile } = useGetDeviceType();
 
   const [shouldClickSignUpBtn, setShouldClickSignUpBtn] = useState(true); // State for handle multiple click on sign up btn
   const [username, setUsername] = useState('');
@@ -79,7 +82,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
   return (
     <div className='sign-up-window p-3 d-flex flex-column text-center justify-content-between'>
       <div className='d-flex flex-column content justify-content-center'>
-        <h3>Sign up</h3>
+        {isMobile ? <h5 className='m-0'>Sign up</h5> : <h3>Sign up</h3>}
         <div className='d-flex flex-column align-items-center mt-2'>
           <div className='position-relative d-flex img-wrapper'>
             <img
@@ -99,7 +102,7 @@ export const SignUpWindow = ({ setToLogin }: Props): JSX.Element => {
               }}
             />
           </div>
-          <p className='m-0 mt-1'>{pfp ? pfp.name : 'Empty profile picture'}</p>
+          {!isMobile && <p className='m-0 mt-1'>{pfp ? pfp.name : 'Empty profile picture'}</p>}
         </div>
 
         <FormField

@@ -19,6 +19,7 @@
       outline: none;
       border: none;
       background-color: var(--main);
+      color: var(--text);
     }
 
     .clear-btn {
@@ -29,6 +30,25 @@
       &:hover {
         transform: scale(1.05);
         transition: 0.33s;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .header {
+    .theme-btn {
+      align-self: flex-end;
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .header {
+    .search-container {
+      .search-icon {
+        width: 24px;
+        height: 24px;
       }
     }
   }

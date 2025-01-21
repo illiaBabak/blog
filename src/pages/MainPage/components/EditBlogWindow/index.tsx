@@ -3,6 +3,7 @@ import { useBlogImageQuery, useEditBlog, useGetUserBlogsQuery } from 'src/api/bl
 import { BlogsList } from 'src/components/BlogsList';
 import { FormField } from 'src/components/FormField';
 import { WindowWrapper } from 'src/components/WindowWrapper';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 import { Blog } from 'src/types/types';
 import { SUPABASE_URL } from 'src/utils/constants';
 
@@ -23,6 +24,8 @@ export const EditBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
   const { data: blogImg } = useBlogImageQuery(blogToEdit?.id ?? 0, { enabled: !!blogToEdit?.id });
 
   const { mutateAsync: editBlog } = useEditBlog();
+
+  const { isMobile } = useGetDeviceType();
 
   const handleEditBlog = () => {
     if (!blogToEdit) return;
@@ -49,14 +52,21 @@ export const EditBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
     <WindowWrapper onClose={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className='edit-blog-window position-relative d-flex flex-column align-items-center'
+        className='edit-blog-window position-relative d-flex flex-column align-items-center rounded p-2'
       >
-        <h2 className='mt-3'>{blogToEdit ? 'Edit blog' : 'Choose blog to edit'}</h2>
+        {isMobile ? (
+          <h6 className='mt-3'>{blogToEdit ? 'Edit blog' : 'Choose blog to edit'}</h6>
+        ) : (
+          <h2 className='mt-3'>{blogToEdit ? 'Edit blog' : 'Choose blog to edit'}</h2>
+        )}
+
         <div onClick={onClose} className='close-btn d-flex justify-content-center align-items-center position-absolute'>
           x
         </div>
         {blogToEdit ? (
-          <div className='d-flex flex-column justify-content-center align-items-center w-75'>
+          <div
+            className={`d-flex flex-column justify-content-center align-items-center ${isMobile ? 'w-100' : 'w-75'}`}
+          >
             <div className='position-relative d-flex img-wrapper mt-4'>
               <img
                 className='blog-img w-100 object-fit-cover'

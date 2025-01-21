@@ -53,7 +53,7 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
         <p className='description m-0 scroll-container-y'>{blog.description}</p>
         {user && (
           <div
-            className='d-flex flex-row user-info mt-2'
+            className='d-flex flex-row blog-user-info mt-2'
             onClick={() => navigate(`${pageConfig.profile}?userId=${user.user_id}`)}
           >
             <img

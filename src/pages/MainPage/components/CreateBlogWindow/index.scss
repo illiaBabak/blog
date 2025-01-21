@@ -50,3 +50,36 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .create-blog-window {
+    width: 450px;
+    height: 500px;
+
+    .img-wrapper {
+      .blog-img,
+      .file-input {
+        height: 180px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .create-blog-window {
+    width: 300px;
+    height: 450px;
+
+    .img-wrapper {
+      .blog-img,
+      .file-input {
+        height: 140px;
+      }
+    }
+
+    .create-btn-wrapper {
+      width: 250px;
+      height: 32px;
+    }
+  }
+}

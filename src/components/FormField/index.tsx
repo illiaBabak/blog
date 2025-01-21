@@ -1,4 +1,5 @@
 import { ChangeEvent, JSX, useRef, useState } from 'react';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 type Props = {
   fieldName: string;
@@ -14,9 +15,11 @@ export const FormField = ({ fieldName, inputVal, type, onChange }: Props): JSX.E
 
   const focusInput = () => inputRef.current?.focus();
 
+  const { isMobile } = useGetDeviceType();
+
   return (
     <div
-      className='field d-flex flex-column justify-content-between w-100 align-items-start mt-4 p-2 rounded position-relative'
+      className={`field d-flex flex-column justify-content-between w-100 align-items-start ${isMobile ? 'mt-3' : 'mt-4'} p-2 rounded position-relative`}
       onClick={focusInput}
     >
       <p className='name mb-1'>{fieldName}</p>

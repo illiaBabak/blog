@@ -69,7 +69,9 @@ export const CreateBlogWindow = ({ onClose }: Props): JSX.Element => {
           />
         </div>
 
-        <div className={`create-btn-wrapper text-white rounded p-2 mt-4 ${!shouldCreate ? 'disabled' : ''}`}>
+        <div
+          className={`create-btn-wrapper d-flex justify-content-center align-items-center text-white rounded p-2 mt-4 ${!shouldCreate ? 'disabled' : ''}`}
+        >
           <div className='create-btn' onClick={createBlogHandle}>
             Create
           </div>

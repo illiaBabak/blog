@@ -28,3 +28,21 @@
     cursor: pointer;
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .field {
+    .field-input {
+      width: 225px;
+      height: 20px;
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .field {
+    .field-input {
+      width: 215px;
+      height: 16px;
+    }
+  }
+}

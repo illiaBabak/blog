@@ -170,3 +170,23 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .theme-btn {
+    width: 72px;
+
+    .theme-switch {
+      --toggle-size: 26px;
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .theme-btn {
+    width: 70px;
+
+    .theme-switch {
+      --toggle-size: 24px;
+    }
+  }
+}
