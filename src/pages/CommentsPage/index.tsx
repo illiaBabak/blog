@@ -2,7 +2,11 @@ import { JSX, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useBlogImageQuery, useGetBlogByIdQuery } from 'src/api/blogs';
 import { useAddComment, useGetCommentsQuery } from 'src/api/comments';
-import { useGetUserByIdQuery, useGetCurrentUserImageQuery, useGetCurrentUserQuery } from 'src/api/user';
+import {
+  useGetUserByIdQuery,
+  useGetCurrentUserImageQuery,
+  useGetCurrentUserQuery,
+} from 'src/api/user';
 import { Loader } from 'src/components/Loader';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { ThemeBtn } from 'src/components/ThemeBtn';
@@ -24,24 +28,31 @@ export const CommentsPage = (): JSX.Element => {
 
   const { data: blog, isLoading: isLoadingBlog } = useGetBlogByIdQuery(blogId);
 
-  const { data: blogImg, isLoading: isLoadingBlogImg } = useBlogImageQuery(blogId);
+  const { data: blogImg, isLoading: isLoadingBlogImg } =
+    useBlogImageQuery(blogId);
 
-  const { data: user, isLoading: isLoadingUser } = useGetUserByIdQuery(blog?.user_id as string, {
-    enabled: !!blog?.user_id,
-  });
-
-  const { data: userImg, isLoading: isLoadingUserImg } = useGetCurrentUserImageQuery(user?.user_id as string, {
-    enabled: !!user?.user_id,
-  });
-
-  const { data: currentUser, isLoading: isLoadingCurrentUser } = useGetCurrentUserQuery();
-
-  const { data: currentUserImg, isLoading: isLoadingCurrentUserImg } = useGetCurrentUserImageQuery(
-    currentUser?.id ?? '',
-    { enabled: !!currentUser?.id }
+  const { data: user, isLoading: isLoadingUser } = useGetUserByIdQuery(
+    blog?.user_id as string,
+    {
+      enabled: !!blog?.user_id,
+    }
   );
 
-  const { data: comments, isLoading: isLoadingComments } = useGetCommentsQuery(blogId);
+  const { data: userImg, isLoading: isLoadingUserImg } =
+    useGetCurrentUserImageQuery(user?.user_id as string, {
+      enabled: !!user?.user_id,
+    });
+
+  const { data: currentUser, isLoading: isLoadingCurrentUser } =
+    useGetCurrentUserQuery();
+
+  const { data: currentUserImg, isLoading: isLoadingCurrentUserImg } =
+    useGetCurrentUserImageQuery(currentUser?.id ?? '', {
+      enabled: !!currentUser?.id,
+    });
+
+  const { data: comments, isLoading: isLoadingComments } =
+    useGetCommentsQuery(blogId);
 
   const { mutateAsync: createComment } = useAddComment();
 
@@ -69,22 +80,34 @@ export const CommentsPage = (): JSX.Element => {
         {isLoadingBlogImg || isLoadingBlog ? (
           <SkeletonLoader />
         ) : (
-          <img className='object-fit-cover blog-img rounded' src={blogImg ?? '/not-found.jpg'} alt='blog-img' />
+          <img
+            className='object-fit-cover blog-img rounded'
+            src={blogImg ?? '/not-found.jpg'}
+            alt='blog-img'
+          />
         )}
         <div className='d-flex flex-column ms-3 w-100 h-100 justify-content-between'>
           <div className='d-flex flex-column info w-100'>
-            {isLoadingBlog ? <SkeletonLoader /> : <h3 className='title'>{blog?.title}</h3>}
             {isLoadingBlog ? (
               <SkeletonLoader />
             ) : (
-              <p className='mt-2 w-75 scroll-container-y description'>{blog?.description}</p>
+              <h3 className='title'>{blog?.title}</h3>
+            )}
+            {isLoadingBlog ? (
+              <SkeletonLoader />
+            ) : (
+              <p className='mt-2 w-75 scroll-container-y description'>
+                {blog?.description}
+              </p>
             )}
           </div>
 
           <div className='d-flex flex-row align-items-center detailed-info'>
             <div
               className='d-flex flex-row user-info align-items-center'
-              onClick={() => navigate(`${pageConfig.profile}?userId=${user?.user_id}`)}
+              onClick={() =>
+                navigate(`${pageConfig.profile}?userId=${user?.user_id}`)
+              }
             >
               {isLoadingUserImg || isLoadingUser || !userImg ? (
                 <SkeletonLoader />
@@ -148,7 +171,11 @@ export const CommentsPage = (): JSX.Element => {
             <Loader />
           ) : (
             comments?.map((comment, index) => (
-              <Comment blogId={blogId} comment={comment} key={`comment-${index}-${comment.id}`} />
+              <Comment
+                blogId={blogId}
+                comment={comment}
+                key={`comment-${index}-${comment.id}`}
+              />
             ))
           )}
         </div>

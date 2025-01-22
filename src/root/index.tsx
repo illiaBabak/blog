@@ -32,15 +32,25 @@ export const App = (): JSX.Element => {
     const { body } = document;
 
     body.style.setProperty('--main', isLightTheme ? '#ebebee' : '#292831');
-    body.style.setProperty('--second-color', isLightTheme ? '#a9a8a8' : '#8f9094');
+    body.style.setProperty(
+      '--second-color',
+      isLightTheme ? '#a9a8a8' : '#8f9094'
+    );
     body.style.setProperty('--accent', isLightTheme ? '#5633af' : '#8e55cc');
-    body.style.setProperty('--primary-color', isLightTheme ? '#fff' : '#333642');
+    body.style.setProperty(
+      '--primary-color',
+      isLightTheme ? '#fff' : '#333642'
+    );
     body.style.setProperty('--start-page', isLightTheme ? '#fff' : '#292831');
 
-    localStorage.setItem('is_light_theme', JSON.stringify(isLightTheme ? 'light' : 'dark'));
+    localStorage.setItem(
+      'is_light_theme',
+      JSON.stringify(isLightTheme ? 'light' : 'dark')
+    );
   }, [isLightTheme]);
 
-  const { start, login, redirect, main, confirm, profile, comments } = pageConfig;
+  const { start, login, redirect, main, confirm, profile, comments } =
+    pageConfig;
 
   return (
     <div className='main-container m-0 p-0'>
