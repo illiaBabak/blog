@@ -65,7 +65,7 @@ export const BlogCard = ({ blog, actionType }: Props): JSX.Element => {
                 e.currentTarget.onerror = null;
               }}
             />
-            <p className='mb-0 ms-2 d-flex align-items-center'>{user?.username}</p>
+            <p className='mb-0 ms-2 username'>{user?.username}</p>
           </div>
         )}
       </div>

@@ -68,6 +68,14 @@
 
     .user-info {
       height: 180px;
+
+      .username {
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 250px;
+      }
     }
 
     .user-info-text {

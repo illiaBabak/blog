@@ -150,7 +150,7 @@ export const ProfilePage = (): JSX.Element => {
         )}
         <div className='d-flex flex-column user-info w-100 justify-content-between ms-2'>
           <div className='user-info-text'>
-            {isLoadingUser ? <SkeletonLoader /> : <p className='m-0'>{user?.username}</p>}
+            {isLoadingUser ? <SkeletonLoader /> : <p className='m-0 username'>{user?.username}</p>}
             {isLoadingUser ? <SkeletonLoader /> : <p className='m-0'>Email: {user?.email}</p>}
           </div>
 

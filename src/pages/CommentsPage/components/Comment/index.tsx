@@ -50,7 +50,8 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
             }}
           />
         )}
-        <p className='mb-0 ms-2'>{user?.username}</p>
+
+        <p className='mb-0 ms-2 username'>{user?.username}</p>
       </div>
 
       <div className='info ms-4 w-100 h-100'>
@@ -62,7 +63,7 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
             type='text'
           />
         ) : (
-          <p className='mb-0 mt-1'>{comment.text}</p>
+          <p className='mb-0 mt-1 comment-text'>{comment.text}</p>
         )}
 
         <p className='mb-0 mt-2 date'>{formatDate(comment.created_at)}</p>

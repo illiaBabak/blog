@@ -5,6 +5,14 @@
   .user-data {
     cursor: pointer;
 
+    .username {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: 150px;
+    }
+
     .user-icon,
     .skeleton-loader {
       width: 40px;
@@ -33,6 +41,16 @@
       border: none;
       background-color: var(--main);
       color: var(--text);
+    }
+
+    .comment-text {
+      display: inline-block;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      line-height: 1.4;
+      width: calc(80%);
     }
   }
 

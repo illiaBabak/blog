@@ -15,6 +15,11 @@
   }
 
   .username {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 180px;
     height: 28px;
   }
 
@@ -36,6 +41,7 @@
     width: 300px;
 
     .username {
+      width: 75px;
       font-size: 14px;
       height: 14px;
     }
@@ -53,6 +59,10 @@
 
 @media only screen and (max-width: 480px) {
   .user-info {
+    .username {
+      width: 60px;
+    }
+
     .user-icon {
       width: 32px;
       height: 32px;

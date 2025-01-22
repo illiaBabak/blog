@@ -68,7 +68,7 @@ export const CommentsPage = (): JSX.Element => {
         )}
         <div className='d-flex flex-column ms-3 w-100 h-100 justify-content-between'>
           <div className='d-flex flex-column info'>
-            {isLoadingBlog ? <SkeletonLoader /> : <h3>{blog?.title}</h3>}
+            {isLoadingBlog ? <SkeletonLoader /> : <h3 className='title'>{blog?.title}</h3>}
             {isLoadingBlog ? (
               <SkeletonLoader />
             ) : (
@@ -95,7 +95,11 @@ export const CommentsPage = (): JSX.Element => {
                 />
               )}
 
-              <p className='mb-0 ms-2 d-flex align-items-center'>{user?.username}</p>
+              {isLoadingUser || !user?.username ? (
+                <SkeletonLoader />
+              ) : (
+                <p className='mb-0 ms-2 username'>{user?.username}</p>
+              )}
             </div>
 
             {isLoadingBlog || !blog?.created_at ? (

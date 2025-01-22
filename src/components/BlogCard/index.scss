@@ -38,7 +38,7 @@
   .title {
     display: inline-block;
     text-overflow: ellipsis;
-    word-break: nowrap;
+    white-space: nowrap;
     overflow: hidden;
     width: 330px;
     color: var(--accent);
@@ -51,6 +51,14 @@
     .user-icon {
       width: 30px;
       height: 30px;
+    }
+
+    .username {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 300px;
     }
 
     &:hover {
