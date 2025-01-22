@@ -16,9 +16,12 @@ import { WindowWrapper } from 'src/components/WindowWrapper';
 import { FormField } from 'src/components/FormField';
 import { SUPABASE_URL } from 'src/utils/constants';
 import { ThemeBtn } from 'src/components/ThemeBtn';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 export const ProfilePage = (): JSX.Element => {
   const navigate = useNavigate();
+
+  const { isMobile } = useGetDeviceType();
 
   const [searchParams] = useSearchParams();
 
@@ -124,8 +127,10 @@ export const ProfilePage = (): JSX.Element => {
           </div>
         </WindowWrapper>
       )}
-      <div className='d-flex user-content align-items-center px-3 w-100 position-relative'>
-        <div className='d-flex btn-container flex-row align-items-center position-absolute'>
+      <div className='d-flex user-content justify-content-center pt-3 px-3 w-100 position-relative'>
+        <div
+          className={`d-flex btn-container ${isMobile ? 'flex-column-reverse' : 'flex-row'} align-items-center position-absolute`}
+        >
           <div
             onClick={() => navigate(pageConfig.main)}
             className='btn mt-3 me-3 p-2 text-white d-flex justify-content-center align-items-center'
@@ -156,7 +161,7 @@ export const ProfilePage = (): JSX.Element => {
 
           {isOwnUser && (
             <div
-              className='btn p-2 text-white d-flex justify-content-center align-items-center'
+              className='btn edit-btn p-2 text-white d-flex justify-content-center align-items-center'
               onClick={() => setIsEdit(true)}
             >
               Edit info

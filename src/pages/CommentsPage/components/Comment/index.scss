@@ -81,3 +81,33 @@
     }
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .comment {
+    .user-data {
+      .username {
+        width: 120px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .comment {
+    .user-data {
+      .username {
+        width: 100px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .comment {
+    .user-data {
+      .username {
+        width: 80px;
+      }
+    }
+  }
+}

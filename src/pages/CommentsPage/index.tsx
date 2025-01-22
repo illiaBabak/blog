@@ -9,9 +9,12 @@ import { ThemeBtn } from 'src/components/ThemeBtn';
 import { pageConfig } from 'src/config/pages';
 import { formatDate } from 'src/utils/formatDate';
 import { Comment } from './components/Comment';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 
 export const CommentsPage = (): JSX.Element => {
   const navigate = useNavigate();
+
+  const { isMobile } = useGetDeviceType();
 
   const [searchParams] = useSearchParams();
 
@@ -51,7 +54,9 @@ export const CommentsPage = (): JSX.Element => {
 
   return (
     <div className='d-flex flex-column h-100 position-relative comments-page'>
-      <div className='d-flex flex-row position-absolute align-items-center btns-container'>
+      <div
+        className={`d-flex ${isMobile ? 'flex-column-reverse' : 'flex-row'} position-absolute align-items-center btns-container`}
+      >
         <div
           onClick={() => navigate(pageConfig.main)}
           className='btn d-flex text-white align-items-center justify-content-center p-2 m-2 mx-3'
@@ -60,14 +65,14 @@ export const CommentsPage = (): JSX.Element => {
         </div>
         <ThemeBtn />
       </div>
-      <div className='d-flex flex-row align-items-start blog-content p-3'>
+      <div className='d-flex blog-content p-3'>
         {isLoadingBlogImg || isLoadingBlog ? (
           <SkeletonLoader />
         ) : (
           <img className='object-fit-cover blog-img rounded' src={blogImg ?? '/not-found.jpg'} alt='blog-img' />
         )}
         <div className='d-flex flex-column ms-3 w-100 h-100 justify-content-between'>
-          <div className='d-flex flex-column info'>
+          <div className='d-flex flex-column info w-100'>
             {isLoadingBlog ? <SkeletonLoader /> : <h3 className='title'>{blog?.title}</h3>}
             {isLoadingBlog ? (
               <SkeletonLoader />

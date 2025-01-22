@@ -58,6 +58,7 @@
     max-height: 220px;
     border-bottom: 2px solid var(--main);
     background-color: var(--primary-color);
+    align-items: start;
 
     .skeleton-loader,
     .user-icon {
@@ -75,6 +76,7 @@
         overflow: hidden;
         white-space: nowrap;
         width: 250px;
+        height: 28px;
       }
     }
 
@@ -98,5 +100,58 @@
 
   .blogs-container {
     background-color: var(--main);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .profile-page {
+    .edit-window {
+      width: 480px;
+    }
+
+    .btn {
+      width: 70px;
+      height: 28px;
+      font-size: 12px;
+    }
+
+    .user-content {
+      min-height: 160px;
+      max-height: 160px;
+
+      .skeleton-loader,
+      .user-icon {
+        min-width: 120px;
+        max-width: 120px;
+        height: 120px;
+      }
+
+      .user-info {
+        height: 120px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  .profile-page {
+    .edit-window {
+      width: 300px;
+    }
+
+    .user-content {
+      flex-direction: column;
+      align-items: center;
+      min-height: 250px;
+      max-height: 250px;
+
+      .user-info {
+        align-items: center;
+      }
+
+      .edit-btn {
+        margin-bottom: 12px;
+      }
+    }
   }
 }

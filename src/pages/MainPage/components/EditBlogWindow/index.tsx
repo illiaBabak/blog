@@ -36,7 +36,9 @@ export const EditBlogWindow = ({ onClose, userId }: Props): JSX.Element => {
       title: editedTitle,
       description: editedDescription,
       user_id: blogToEdit?.user_id ?? '',
-      image_url: `${SUPABASE_URL}/storage/v1/object/public/images/blogs/${blogToEdit.id}?t=${Date.now()}`,
+      image_url: editedBlogImg
+        ? `${SUPABASE_URL}/storage/v1/object/public/images/blogs/${blogToEdit.id}?t=${Date.now()}`
+        : blogToEdit.image_url,
     };
 
     editBlog({ blog: editedBlog, newImg: editedBlogImg });

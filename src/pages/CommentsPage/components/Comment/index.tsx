@@ -4,6 +4,7 @@ import { useDeleteComment, useEditComment } from 'src/api/comments';
 import { useGetCurrentUserQuery, useGetUserByIdQuery } from 'src/api/user';
 import { SkeletonLoader } from 'src/components/SkeletonLoader';
 import { pageConfig } from 'src/config/pages';
+import { useGetDeviceType } from 'src/hooks/useGetDeviceType';
 import { CommentType } from 'src/types/types';
 import { formatDate } from 'src/utils/formatDate';
 
@@ -14,6 +15,8 @@ type Props = {
 
 export const Comment = ({ comment, blogId }: Props): JSX.Element => {
   const navigate = useNavigate();
+
+  const { isMobile } = useGetDeviceType();
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -35,7 +38,7 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
     <div className='d-flex flex-row align-items-center comment rounded p-4 m-2 mx-3 position-relative'>
       <div
         onClick={() => navigate(`${pageConfig.profile}?userId=${user?.user_id}`)}
-        className='d-flex flex-row align-items-center user-data'
+        className={`d-flex ${isMobile ? 'flex-column' : 'flex-row'} align-items-center user-data`}
       >
         {isLoadingUserImg ? (
           <SkeletonLoader />
@@ -54,7 +57,7 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
         <p className='mb-0 ms-2 username'>{user?.username}</p>
       </div>
 
-      <div className='info ms-4 w-100 h-100'>
+      <div className={`info ${isMobile ? 'ms-2' : 'ms-4'} w-100 h-100`}>
         {isEdit ? (
           <input
             value={commentText}

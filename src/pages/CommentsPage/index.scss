@@ -18,6 +18,8 @@
   }
 
   .blog-content {
+    flex-direction: row;
+    align-items: flex-start;
     height: 330px;
     background-color: var(--primary-color);
 
@@ -39,7 +41,7 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        width: 500px;
+        width: 350px;
       }
 
       .skeleton-loader {
@@ -83,7 +85,8 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
-          width: 300px;
+          width: 170px;
+          height: 28px;
         }
 
         .skeleton-loader {
@@ -137,6 +140,346 @@
 
     .comments-container {
       height: 350px;
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .comments-page {
+    .btn {
+      width: 90px;
+    }
+
+    .blog-content {
+      height: 300px;
+
+      .blog-img {
+        min-width: 250px;
+        min-height: 250px;
+        max-width: 250px;
+        max-height: 250px;
+      }
+
+      .skeleton-loader {
+        width: 250px;
+        height: 250px;
+      }
+
+      .info {
+        .description {
+          height: 150px;
+        }
+
+        .title {
+          width: 280px;
+        }
+
+        .skeleton-loader {
+          &:nth-of-type(1) {
+            width: 280px;
+            height: 30px;
+          }
+
+          &:nth-of-type(2) {
+            width: 75%;
+            height: 150px;
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .comments-page {
+    .btn {
+      width: 70px;
+      font-size: 12px;
+    }
+
+    .blog-content {
+      height: 260px;
+
+      .blog-img {
+        min-width: 200px;
+        min-height: 200px;
+        max-width: 200px;
+        max-height: 200px;
+      }
+
+      .skeleton-loader {
+        width: 200px;
+        height: 200px;
+      }
+
+      .info {
+        .description {
+          height: 90px;
+        }
+
+        .title {
+          width: 200px;
+        }
+
+        .skeleton-loader {
+          &:nth-of-type(1) {
+            width: 200px;
+          }
+
+          &:nth-of-type(2) {
+            width: 75%;
+            height: 90px;
+            margin-top: 16px;
+          }
+        }
+      }
+
+      .detailed-info {
+        .skeleton-loader {
+          width: 200px;
+          height: 30px;
+          margin-left: 8px;
+        }
+
+        .user-info {
+          .username {
+            width: 130px;
+          }
+
+          .skeleton-loader {
+            &:nth-of-type(2) {
+              width: 130px;
+              height: 30px;
+              margin: 0 0 0 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .comments-page {
+    .btn {
+      width: 50px;
+      height: 28px;
+      font-size: 10px;
+    }
+
+    .blog-content {
+      height: 210px;
+
+      .blog-img {
+        min-width: 120px;
+        min-height: 120px;
+        max-width: 120px;
+        max-height: 120px;
+      }
+
+      .skeleton-loader {
+        width: 120px;
+        height: 120px;
+      }
+
+      .info {
+        align-items: center;
+
+        .description {
+          height: 50px;
+        }
+
+        .title {
+          width: 170px;
+          margin-top: 8px;
+        }
+
+        .skeleton-loader {
+          &:nth-of-type(1) {
+            width: 170px;
+            margin-top: 8px;
+          }
+
+          &:nth-of-type(2) {
+            width: 75%;
+            height: 50px;
+            margin-top: 16px;
+          }
+        }
+      }
+
+      .detailed-info {
+        justify-content: center;
+
+        .skeleton-loader {
+          width: 180px;
+          height: 14px;
+          margin-left: 8px;
+        }
+
+        .user-info {
+          .username {
+            width: 100px;
+            height: 14px;
+            font-size: 10px;
+          }
+
+          .user-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .skeleton-loader {
+            &:nth-of-type(1) {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+            }
+
+            &:nth-of-type(2) {
+              width: 100px;
+              height: 14px;
+              margin: 0 0 0 8px;
+            }
+          }
+        }
+      }
+    }
+
+    .comments {
+      .comment-form {
+        height: 60px;
+
+        .user-img,
+        .skeleton-loader {
+          width: 30px;
+          height: 30px;
+        }
+
+        .comment-input {
+          width: 260px;
+          height: 36px;
+        }
+
+        .btn {
+          width: 60px;
+        }
+      }
+
+      .comments-container {
+        height: 320px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .comments-page {
+    .btn {
+      height: 24px;
+    }
+
+    .blog-content {
+      flex-direction: column;
+      align-items: center;
+      height: 400px;
+
+      .blog-img {
+        min-width: 100px;
+        min-height: 100px;
+        max-width: 100px;
+        max-height: 100px;
+      }
+
+      .skeleton-loader {
+        width: 100px;
+        height: 100px;
+      }
+
+      .info {
+        .description {
+          height: 50px;
+        }
+
+        .title {
+          width: 170px;
+        }
+
+        .skeleton-loader {
+          &:nth-of-type(1) {
+            width: 170px;
+          }
+
+          &:nth-of-type(2) {
+            width: 75%;
+            height: 50px;
+            margin-top: 16px;
+          }
+        }
+      }
+
+      .detailed-info {
+        font-size: 10px;
+
+        .skeleton-loader {
+          width: 180px;
+          height: 14px;
+          margin-left: 8px;
+        }
+
+        .user-info {
+          .username {
+            width: 100px;
+            height: 14px;
+            font-size: 10px;
+          }
+
+          .user-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .skeleton-loader {
+            &:nth-of-type(1) {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+            }
+
+            &:nth-of-type(2) {
+              width: 100px;
+              height: 14px;
+              margin: 0 0 0 8px;
+            }
+          }
+        }
+      }
+    }
+
+    .comments {
+      .comment-form {
+        height: 60px;
+
+        .user-img,
+        .skeleton-loader {
+          width: 30px;
+          height: 30px;
+        }
+
+        .comment-input {
+          width: 260px;
+          height: 36px;
+        }
+
+        .btn {
+          width: 60px;
+        }
+      }
+
+      .comments-container {
+        height: 320px;
+      }
     }
   }
 }

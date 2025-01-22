@@ -67,7 +67,7 @@ export const UserInfo = ({ user, isLoadingUser }: Props): JSX.Element => {
     <div
       className={`d-flex ${isMobile ? 'flex-row px-3 w-100 justify-content-between' : 'flex-column'} align-items-center user-info rounded`}
     >
-      <div className='d-flex align-items-center flex-column justify-content-center'>
+      <div className='d-flex align-items-center flex-column justify-content-center text-center'>
         <img
           className={`user-icon ${isMobile ? 'm-0' : 'mt-4'} rounded-circle`}
           src={isLoadingUser || isLoadingUserImg || !userImg ? '/empty-pfp.png' : userImg}
