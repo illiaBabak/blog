@@ -7,7 +7,7 @@ type Props = {
 
 export const WindowWrapper = ({ children, onClose }: Props): JSX.Element => (
   <div
-    className='wrapper position-absolute d-flex justify-content-center align-items-center overflow-hidden'
+    className='wrapper position-fixed d-flex justify-content-center align-items-center overflow-hidden'
     onClick={onClose}
   >
     {children}
