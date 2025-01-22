@@ -86,7 +86,7 @@ export const CommentsPage = (): JSX.Element => {
             alt='blog-img'
           />
         )}
-        <div className='d-flex flex-column ms-3 w-100 h-100 justify-content-between'>
+        <div className='d-flex flex-column full-info w-100 h-100 justify-content-between'>
           <div className='d-flex flex-column info w-100'>
             {isLoadingBlog ? (
               <SkeletonLoader />

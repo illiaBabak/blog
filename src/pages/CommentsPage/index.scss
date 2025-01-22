@@ -35,77 +35,81 @@
       height: 300px;
     }
 
-    .info {
-      .title {
-        display: inline-block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        width: 350px;
-      }
+    .full-info {
+      margin-left: 12px;
 
-      .skeleton-loader {
-        &:nth-of-type(1) {
-          width: 300px;
-          height: 30px;
-        }
-
-        &:nth-of-type(2) {
-          width: 75%;
-          height: 200px;
-          margin-top: 16px;
-        }
-      }
-
-      .description {
-        height: 200px;
-      }
-    }
-
-    .detailed-info {
-      .skeleton-loader {
-        width: 300px;
-        height: 30px;
-        margin-left: 8px;
-      }
-
-      .user-info {
-        width: auto;
-        background-color: var(--primary-color);
-        height: 30px;
-        cursor: pointer;
-
-        .user-icon {
-          width: 30px;
-          height: 30px;
-        }
-
-        .username {
+      .info {
+        .title {
           display: inline-block;
-          text-overflow: ellipsis;
-          white-space: nowrap;
           overflow: hidden;
-          width: 170px;
-          height: 28px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 350px;
         }
 
         .skeleton-loader {
           &:nth-of-type(1) {
-            width: 30px;
+            width: 300px;
             height: 30px;
-            border-radius: 50%;
           }
 
           &:nth-of-type(2) {
-            width: 150px;
-            height: 30px;
-            margin: 0 0 0 8px;
+            width: 75%;
+            height: 200px;
+            margin-top: 16px;
           }
         }
 
-        &:hover {
-          transform: scale(1.05);
-          transition: 0.33s;
+        .description {
+          height: 200px;
+        }
+      }
+
+      .detailed-info {
+        .skeleton-loader {
+          width: 300px;
+          height: 30px;
+          margin-left: 8px;
+        }
+
+        .user-info {
+          width: auto;
+          background-color: var(--primary-color);
+          height: 30px;
+          cursor: pointer;
+
+          .user-icon {
+            width: 30px;
+            height: 30px;
+          }
+
+          .username {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 170px;
+            height: 28px;
+          }
+
+          .skeleton-loader {
+            &:nth-of-type(1) {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+            }
+
+            &:nth-of-type(2) {
+              width: 150px;
+              height: 30px;
+              margin: 0 0 0 8px;
+            }
+          }
+
+          &:hover {
+            transform: scale(1.05);
+            transition: 0.33s;
+          }
         }
       }
     }
@@ -165,25 +169,27 @@
         height: 250px;
       }
 
-      .info {
-        .description {
-          height: 150px;
-        }
-
-        .title {
-          width: 280px;
-        }
-
-        .skeleton-loader {
-          &:nth-of-type(1) {
-            width: 280px;
-            height: 30px;
+      .full-info {
+        .info {
+          .description {
+            height: 150px;
           }
 
-          &:nth-of-type(2) {
-            width: 75%;
-            height: 150px;
-            margin-top: 16px;
+          .title {
+            width: 280px;
+          }
+
+          .skeleton-loader {
+            &:nth-of-type(1) {
+              width: 280px;
+              height: 30px;
+            }
+
+            &:nth-of-type(2) {
+              width: 75%;
+              height: 150px;
+              margin-top: 16px;
+            }
           }
         }
       }
@@ -213,45 +219,47 @@
         height: 200px;
       }
 
-      .info {
-        .description {
-          height: 90px;
-        }
+      .full-info {
+        .info {
+          .description {
+            height: 90px;
+          }
 
-        .title {
-          width: 200px;
-        }
-
-        .skeleton-loader {
-          &:nth-of-type(1) {
+          .title {
             width: 200px;
           }
 
-          &:nth-of-type(2) {
-            width: 75%;
-            height: 90px;
-            margin-top: 16px;
-          }
-        }
-      }
-
-      .detailed-info {
-        .skeleton-loader {
-          width: 200px;
-          height: 30px;
-          margin-left: 8px;
-        }
-
-        .user-info {
-          .username {
-            width: 130px;
-          }
-
           .skeleton-loader {
+            &:nth-of-type(1) {
+              width: 200px;
+            }
+
             &:nth-of-type(2) {
+              width: 75%;
+              height: 90px;
+              margin-top: 16px;
+            }
+          }
+        }
+
+        .detailed-info {
+          .skeleton-loader {
+            width: 200px;
+            height: 30px;
+            margin-left: 8px;
+          }
+
+          .user-info {
+            .username {
               width: 130px;
-              height: 30px;
-              margin: 0 0 0 8px;
+            }
+
+            .skeleton-loader {
+              &:nth-of-type(2) {
+                width: 130px;
+                height: 30px;
+                margin: 0 0 0 8px;
+              }
             }
           }
         }
@@ -283,64 +291,69 @@
         height: 120px;
       }
 
-      .info {
-        align-items: center;
+      .full-info {
+        margin: 0;
 
-        .description {
-          height: 50px;
-        }
+        .info {
+          align-items: center;
 
-        .title {
-          width: 170px;
-          margin-top: 8px;
-        }
+          .description {
+            height: 50px;
+          }
 
-        .skeleton-loader {
-          &:nth-of-type(1) {
+          .title {
             width: 170px;
             margin-top: 8px;
-          }
-
-          &:nth-of-type(2) {
-            width: 75%;
-            height: 50px;
-            margin-top: 16px;
-          }
-        }
-      }
-
-      .detailed-info {
-        justify-content: center;
-
-        .skeleton-loader {
-          width: 180px;
-          height: 14px;
-          margin-left: 8px;
-        }
-
-        .user-info {
-          .username {
-            width: 100px;
-            height: 14px;
-            font-size: 10px;
-          }
-
-          .user-icon {
-            width: 24px;
-            height: 24px;
+            text-align: center;
           }
 
           .skeleton-loader {
             &:nth-of-type(1) {
-              width: 24px;
-              height: 24px;
-              border-radius: 50%;
+              width: 170px;
+              margin-top: 8px;
             }
 
             &:nth-of-type(2) {
+              width: 75%;
+              height: 50px;
+              margin-top: 16px;
+            }
+          }
+        }
+
+        .detailed-info {
+          justify-content: center;
+
+          .skeleton-loader {
+            width: 180px;
+            height: 14px;
+            margin-left: 8px;
+          }
+
+          .user-info {
+            .username {
               width: 100px;
               height: 14px;
-              margin: 0 0 0 8px;
+              font-size: 10px;
+            }
+
+            .user-icon {
+              width: 24px;
+              height: 24px;
+            }
+
+            .skeleton-loader {
+              &:nth-of-type(1) {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+              }
+
+              &:nth-of-type(2) {
+                width: 100px;
+                height: 14px;
+                margin: 0 0 0 8px;
+              }
             }
           }
         }
