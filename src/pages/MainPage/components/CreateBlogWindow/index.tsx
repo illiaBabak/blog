@@ -19,7 +19,7 @@ export const CreateBlogWindow = ({ onClose }: Props): JSX.Element => {
     onClose();
   };
 
-  const shouldCreate = !!title.length && !!description.length;
+  const shouldCreate = !!title.length || !!description.length;
 
   return (
     <WindowWrapper onClose={onClose}>
