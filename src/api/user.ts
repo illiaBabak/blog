@@ -51,15 +51,23 @@ const updateUserPublicInfo = async ({
 const uploadUserImage = async (email: string, file: File): Promise<void> => {
   await supabase.storage.from('images').remove([`pfp/${email}`]);
 
-  const { error } = await supabase.storage.from('images').upload(`pfp/${email}`, file, {
-    cacheControl: '0',
-    upsert: true,
-  });
+  const { error } = await supabase.storage
+    .from('images')
+    .upload(`pfp/${email}`, file, {
+      cacheControl: '0',
+      upsert: true,
+    });
 
   if (error) throw new Error(error.stack);
 };
 
-const login = async ({ email, password }: { email: string; password: string }): Promise<void> => {
+const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<void> => {
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -91,7 +99,7 @@ const signUp = async ({
       data: {
         username: optionalData.username,
       },
-      emailRedirectTo: `http://localhost:3000${pageConfig.confirm}`,
+      emailRedirectTo: `https://blog-illiababaks-projects.vercel.app${pageConfig.confirm}`,
     },
   });
 
@@ -129,14 +137,17 @@ const signInWithGoogle = async (): Promise<void> => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `http://localhost:3000${pageConfig.main}`,
+      redirectTo: `https://blog-illiababaks-projects.vercel.app${pageConfig.main}`,
     },
   });
 
   if (error) throw new Error(error.stack);
 };
 
-const updateUser = async (username: string, imageUrl: string | null): Promise<void> => {
+const updateUser = async (
+  username: string,
+  imageUrl: string | null
+): Promise<void> => {
   const {
     data: { user },
     error,
@@ -146,11 +157,20 @@ const updateUser = async (username: string, imageUrl: string | null): Promise<vo
 
   if (error) throw new Error(error.stack);
 
-  if (user) await updateUserPublicInfo({ email: user.email ?? '', username, userId: user.id, imageUrl });
+  if (user)
+    await updateUserPublicInfo({
+      email: user.email ?? '',
+      username,
+      userId: user.id,
+      imageUrl,
+    });
 };
 
 const getUserById = async (userId: string): Promise<PublicUser | null> => {
-  const { data, error } = await supabase.from('users').select().eq('user_id', userId);
+  const { data, error } = await supabase
+    .from('users')
+    .select()
+    .eq('user_id', userId);
 
   if (error) throw new Error(error.stack);
 
@@ -163,7 +183,11 @@ const signOut = async (): Promise<void> => {
   if (error) throw new Error(error.stack);
 };
 
-export const useLogin = (): UseMutationResult<void, Error, { email: string; password: string }> => {
+export const useLogin = (): UseMutationResult<
+  void,
+  Error,
+  { email: string; password: string }
+> => {
   const { setLoginMessage, setIsSuccesedLogin } = useContext(LoginContext);
 
   return useMutation({
@@ -248,11 +272,16 @@ export const useUpdateUserPublicInfo = (): UseMutationResult<
 
   return useMutation({
     mutationKey: [USER_MUTATION, USER_UPDATE_PUBLIC_INFO],
-    mutationFn: async ({ username, imageUrl }) => await updateUser(username, imageUrl),
+    mutationFn: async ({ username, imageUrl }) =>
+      await updateUser(username, imageUrl),
     onSettled: async (_, __, { email, userId }) => {
       await queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY] });
-      await queryClient.invalidateQueries({ queryKey: [GET_USER_BY_ID, userId] });
-      await queryClient.invalidateQueries({ queryKey: [CURRENT_USER_IMAGE_QUERY, email] });
+      await queryClient.invalidateQueries({
+        queryKey: [GET_USER_BY_ID, userId],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [CURRENT_USER_IMAGE_QUERY, email],
+      });
     },
   });
 };
@@ -273,7 +302,11 @@ export const useSignOut = (): UseMutationResult<void, Error, void, unknown> =>
     mutationFn: signOut,
   });
 
-export const useUploadUserImage = (): UseMutationResult<void, Error, { userId: string; email: string; file: File }> => {
+export const useUploadUserImage = (): UseMutationResult<
+  void,
+  Error,
+  { userId: string; email: string; file: File }
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -282,8 +315,14 @@ export const useUploadUserImage = (): UseMutationResult<void, Error, { userId: s
     },
     mutationKey: [USER_MUTATION, USER_UPLOAD_IMAGE],
     onSettled: (_, __, { userId }) => {
-      queryClient.invalidateQueries({ queryKey: [CURRENT_USER_IMAGE_QUERY, userId], refetchType: 'all' });
-      queryClient.invalidateQueries({ queryKey: [GET_USER_BLOGS_QUERY], refetchType: 'all' });
+      queryClient.invalidateQueries({
+        queryKey: [CURRENT_USER_IMAGE_QUERY, userId],
+        refetchType: 'all',
+      });
+      queryClient.invalidateQueries({
+        queryKey: [GET_USER_BLOGS_QUERY],
+        refetchType: 'all',
+      });
     },
   });
 };
