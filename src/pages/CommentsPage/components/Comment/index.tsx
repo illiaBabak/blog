@@ -24,9 +24,12 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
 
   const { data: currentUser } = useGetCurrentUserQuery();
 
-  const { data: user, isLoading: isLoadingUserImg } = useGetUserByIdQuery(comment.user_id, {
-    enabled: !!comment.user_id,
-  });
+  const { data: user, isLoading: isLoadingUserImg } = useGetUserByIdQuery(
+    comment.user_id,
+    {
+      enabled: !!comment.user_id,
+    }
+  );
 
   const { mutateAsync: deleteComment } = useDeleteComment();
 
@@ -37,7 +40,9 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
   return (
     <div className='d-flex flex-row align-items-center comment rounded p-4 m-2 mx-3 position-relative'>
       <div
-        onClick={() => navigate(`${pageConfig.profile}?userId=${user?.user_id}`)}
+        onClick={() =>
+          navigate(`${pageConfig.profile}?userId=${user?.user_id}`)
+        }
         className={`d-flex ${isMobile ? 'flex-column' : 'flex-row'} align-items-center user-data`}
       >
         {isLoadingUserImg ? (
@@ -54,7 +59,7 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
           />
         )}
 
-        <p className='mb-0 ms-2 username'>{user?.username}</p>
+        <p className='mb-0 username'>{user?.username}</p>
       </div>
 
       <div className={`info ${isMobile ? 'ms-2' : 'ms-4'} w-100 h-100`}>
@@ -78,7 +83,11 @@ export const Comment = ({ comment, blogId }: Props): JSX.Element => {
             setIsEdit((prev) => !prev);
 
             if (isEdit && comment.text !== commentText)
-              editComment({ commentId: comment.id, blogId, newComment: commentText });
+              editComment({
+                commentId: comment.id,
+                blogId,
+                newComment: commentText,
+              });
           }}
           className='object-fit-cover edit-btn position-absolute m-1'
           src={isEdit ? '/success.png' : '/edit.png'}
